@@ -18,11 +18,12 @@ import re
 from collections import OrderedDict
 import numpy as np
 import cv2
+from pathlib import Path
 
 from ..config import PathField, StringField, ConfigError, ListInputsField
 from ..logging import print_info
 from .launcher import Launcher, LauncherConfigValidator
-from ..utils import get_or_parse_value
+from ..utils import get_or_parse_value, get_path
 
 DEVICE_REGEX = r'(?P<device>cpu$|gpu|gpu_fp16)?'
 BACKEND_REGEX = r'(?P<backend>ocv|ie)?'
@@ -63,8 +64,8 @@ class OpenCVLauncher(Launcher):
     def parameters(cls):
         parameters = super().parameters()
         parameters.update({
-            'model': PathField(description="Path to model file."),
-            'weights': PathField(description="Path to weights file.", optional=True, default='', check_exists=False),
+            'model': PathField(description="Path to model file.", file_or_directory=True),
+            'weights': PathField(description="Path to weights file.", optional=True, check_exists=False, file_or_directory=True),
             'device': StringField(
                 regex=DEVICE_REGEX, choices=OpenCVLauncher.TARGET_DEVICES.keys(),
                 description="Device name: {}".format(', '.join(OpenCVLauncher.TARGET_DEVICES.keys()))
@@ -100,8 +101,7 @@ class OpenCVLauncher(Launcher):
             raise ConfigError('{} is not supported device'.format(selected_device))
 
         if not self._delayed_model_loading:
-            self.model = self.get_value_from_config('model')
-            self.weights = self.get_value_from_config('weights')
+            self.model, self.weights = self.automatic_model_search()
             self.network = self.create_network(self.model, self.weights)
             self._inputs_shapes = self.get_inputs_from_config(self.config)
             self.network.setInputsNames(list(self._inputs_shapes.keys()))
@@ -154,6 +154,65 @@ class OpenCVLauncher(Launcher):
 
     def predict_async(self, *args, **kwargs):
         raise ValueError('OpenCV Launcher does not support async mode yet')
+
+    def automatic_model_search(self):
+        def get_xml(model_dir):
+            models_list = list(model_dir.glob('{}.xml'.format(self._model_name)))
+            if not models_list:
+                models_list = list(model_dir.glob('*.xml'))
+            return models_list
+
+        def get_blob(model_dir):
+            blobs_list = list(Path(model_dir).glob('{}.blob'.format(self._model_name)))
+            if not blobs_list:
+                blobs_list = list(Path(model_dir).glob('*.blob'))
+            return blobs_list
+
+        def get_onnx(model_dir):
+            onnx_list = list(Path(model_dir).glob('{}.onnx'.format(self._model_name)))
+            if not onnx_list:
+                onnx_list = list(Path(model_dir).glob('*.onnx'))
+            return onnx_list
+
+        def get_model():
+            model = Path(self.get_value_from_config('model'))
+            model_is_blob = self.get_value_from_config('_model_is_blob')
+            if not model.is_dir():
+                accepted_suffixes = ['.blob', '.onnx', '.xml']
+                if model.suffix not in accepted_suffixes:
+                    raise ConfigError('Models with following suffixes are allowed: {}'.format(accepted_suffixes))
+                print_info('Found model {}'.format(model))
+                return model, model.suffix == '.blob'
+            if model_is_blob:
+                model_list = get_blob(model)
+            else:
+                model_list = get_xml(model)
+                if not model_list and model_is_blob is None:
+                    model_list = get_blob(model)
+                if not model_list:
+                    model_list = get_onnx(model)
+            if not model_list:
+                raise ConfigError('suitable model is not found')
+            if len(model_list) != 1:
+                raise ConfigError('More than one model matched, please specify explicitly')
+            model = model_list[0]
+            print_info('Found model {}'.format(model))
+            return model, model.suffix == '.blob'
+
+        model, is_blob = get_model()
+        if is_blob:
+            return model, None
+        weights = self.get_value_from_config('weights')
+        if (weights is None or Path(weights).is_dir()) and model.suffix != '.onnx':
+            weights_dir = weights or model.parent
+            weights = Path(weights_dir) / model.name.replace('xml', 'bin')
+        if weights is not None:
+            accepted_weights_suffixes = ['.bin']
+            if weights.suffix not in accepted_weights_suffixes:
+                raise ConfigError('Weights with following suffixes are allowed: {}'.format(accepted_weights_suffixes))
+            print_info('Found weights {}'.format(get_path(weights)))
+
+        return model, weights
 
     def create_network(self, model, weights):
         network = cv2.dnn.readNet(str(model), str(weights))
