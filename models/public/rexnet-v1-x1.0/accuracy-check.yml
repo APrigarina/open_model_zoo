@@ -9,6 +9,12 @@ models:
           - name: input.1
             type: INPUT
 
+      - framework: opencv
+        inputs:
+          - name: input.1
+            type: INPUT
+            shape: 1, 3, 224, 224
+        adapter: classification
     datasets:
       - name: imagenet_1000_classes
         reader: pillow_imread
@@ -17,10 +23,10 @@ models:
           - type: resize
             size: 256
             aspect_ratio_scale: greater
-            use_pillow: True
+            use_pillow: true
             interpolation: BICUBIC
           - type: crop
-            use_pillow: True
+            use_pillow: true
             size: 224
           - type: normalization
             mean: [123.675, 116.28, 103.53]
@@ -50,10 +56,10 @@ models:
           - type: resize
             size: 256
             aspect_ratio_scale: greater
-            use_pillow: True
+            use_pillow: true
             interpolation: BICUBIC
           - type: crop
-            use_pillow: True
+            use_pillow: true
             size: 224
           - type: rgb_to_bgr
 

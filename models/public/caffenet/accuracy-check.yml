@@ -2,8 +2,14 @@ models:
   - name: caffenet-cf
     launchers:
       - framework: caffe
-        model:   deploy.prototxt
+        model: deploy.prototxt
         weights: bvlc_reference_caffenet.caffemodel
+        adapter: classification
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 1, 3, 227, 227
         adapter: classification
     datasets:
       - name: imagenet_1000_classes

@@ -2,10 +2,16 @@ models:
   - name: densenet-161-cf
     launchers:
       - framework: caffe
-        model:   densenet-161.prototxt
+        model: densenet-161.prototxt
         weights: densenet-161.caffemodel
         adapter: classification
 
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 1, 3, 224, 224
+        adapter: classification
     datasets:
       - name: imagenet_1000_classes
         preprocessing:

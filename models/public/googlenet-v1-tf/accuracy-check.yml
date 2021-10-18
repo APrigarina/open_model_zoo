@@ -5,6 +5,12 @@ models:
         model: inception_v1.frozen.pb
         adapter: classification
 
+      - framework: opencv
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 1, 224, 224, 3
+        adapter: classification
     datasets:
       - name: imagenet_1001_classes
         preprocessing:

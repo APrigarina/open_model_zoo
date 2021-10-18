@@ -6,6 +6,12 @@ models:
         model: repvgg-b1.onnx
         adapter: classification
 
+      - framework: opencv
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 1, 3, 224, 224
+        adapter: classification
     datasets:
       - name: imagenet_1000_classes
         reader: pillow_imread
@@ -14,10 +20,10 @@ models:
           - type: resize
             size: 256
             aspect_ratio_scale: greater
-            use_pillow: True
+            use_pillow: true
             interpolation: BILINEAR
           - type: crop
-            use_pillow: True
+            use_pillow: true
             size: 224
           - type: normalization
             std: [58.624, 57.12, 57.375]
@@ -47,10 +53,10 @@ models:
           - type: resize
             size: 256
             aspect_ratio_scale: greater
-            use_pillow: True
+            use_pillow: true
             interpolation: BILINEAR
           - type: crop
-            use_pillow: True
+            use_pillow: true
             size: 224
           - type: rgb_to_bgr
 

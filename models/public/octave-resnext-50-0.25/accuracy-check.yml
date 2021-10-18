@@ -7,10 +7,16 @@ models:
         model: checkpoint-0-0000.params
         adapter: classification
         inputs:
-          - name: 'data'
+          - name: data
             type: INPUT
             shape: 3,224,224
 
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 1, 3, 224, 224
+        adapter: classification
     datasets:
       - name: imagenet_1000_classes
         reader: opencv_imread
