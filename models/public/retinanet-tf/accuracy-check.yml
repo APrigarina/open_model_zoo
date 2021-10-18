@@ -4,6 +4,13 @@ models:
       - framework: dlsdk
         adapter: ssd
 
+      - framework: opencv
+        inputs:
+          - name: input_1
+            type: INPUT
+            shape: 3, 1333, 1333
+        adapter: ssd
+
     datasets:
       - name: ms_coco_detection_80_class_without_background
         preprocessing:
@@ -20,7 +27,7 @@ models:
           - type: filter
             apply_to: prediction
             min_confidence: 0.05
-            remove_filtered: True
+            remove_filtered: true
 
         metrics:
           - type: coco_precision

@@ -2,7 +2,7 @@ models:
   - name: googlenet-v2-cf
     launchers:
       - framework: caffe
-        model:   googlenet-v2.prototxt
+        model: googlenet-v2.prototxt
         weights: googlenet-v2.caffemodel
         adapter: classification
 
@@ -28,6 +28,12 @@ models:
   - name: googlenet-v2
     launchers:
       - framework: dlsdk
+        adapter: classification
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 224, 224
         adapter: classification
 
     datasets:

@@ -17,10 +17,10 @@ models:
           - type: bgr_to_rgb
           - type: crop
             central_fraction: 0.875
-            use_pillow: True
+            use_pillow: true
           - type: resize
             size: 224
-            use_pillow: True
+            use_pillow: true
             interpolation: BICUBIC
         metrics:
           - name: accuracy@top1
@@ -37,16 +37,22 @@ models:
     launchers:
       - framework: dlsdk
         adapter: classification
+      - framework: opencv
+        inputs:
+          - name: sub/placeholder_port_0
+            type: INPUT
+            shape: 3, 224, 224
+        adapter: classification
 
     datasets:
       - name: imagenet_1000_classes
         preprocessing:
           - type: crop
             central_fraction: 0.875
-            use_pillow: True
+            use_pillow: true
           - type: resize
             size: 224
-            use_pillow: True
+            use_pillow: true
             interpolation: BICUBIC
         metrics:
           - name: accuracy@top1

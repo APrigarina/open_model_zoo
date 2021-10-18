@@ -8,7 +8,7 @@ models:
           eos_label: '[s]'
           start_label: '[GO]'
           start_index: 1
-          do_lower: True
+          do_lower: true
           # Use option "accuracy_check [...] --model_attributes <path_to_vocab>" to provide path to vocab.txt
           vocabulary_file: vocab.txt
 
@@ -76,7 +76,20 @@ models:
           eos_label: '[s]'
           start_label: '[GO]'
           start_index: 1
-          do_lower: True
+          do_lower: true
+          # Use option "accuracy_check [...] --model_attributes <path_to_vocab>" to provide path to vocab.txt
+          vocabulary_file: vocab.txt
+      - framework: opencv
+        inputs:
+          - name: image
+            type: INPUT
+            shape: 1, 224, 224
+        adapter:
+          type: simple_decoder
+          eos_label: '[s]'
+          start_label: '[GO]'
+          start_index: 1
+          do_lower: true
           # Use option "accuracy_check [...] --model_attributes <path_to_vocab>" to provide path to vocab.txt
           vocabulary_file: vocab.txt
 

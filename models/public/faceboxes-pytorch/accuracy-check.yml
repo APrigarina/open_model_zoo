@@ -5,8 +5,18 @@ models:
       - framework: dlsdk
         adapter:
           type: faceboxes
-          boxes_out: "boxes"
-          scores_out: "scores"
+          boxes_out: boxes
+          scores_out: scores
+
+      - framework: opencv
+        inputs:
+          - name: input.1
+            type: INPUT
+            shape: 3, 1024, 1024
+        adapter:
+          type: faceboxes
+          boxes_out: boxes
+          scores_out: scores
 
     datasets:
       - name: wider
@@ -21,10 +31,10 @@ models:
           - type: filter
             apply_to: annotation
             height_range: 100
-            is_empty: True
+            is_empty: true
 
         metrics:
           - type: map
-            ignore_difficult: True
-            include_boundaries: False
+            ignore_difficult: true
+            include_boundaries: false
             reference: 0.83565
