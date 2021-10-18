@@ -5,7 +5,16 @@ models:
       - framework: dlsdk
         adapter:
           type: brain_tumor_segmentation
-          make_argmax: True
+          make_argmax: true
+
+      - framework: opencv
+        inputs:
+          - name: data_crop
+            type: INPUT
+            shape: 4, 128, 128, 128
+        adapter:
+          type: brain_tumor_segmentation
+          make_argmax: true
 
     datasets:
       - name: BraTS
@@ -16,7 +25,7 @@ models:
           # ground truth median             [0.9316, 0.7714, 0.8535, 0.8456]
           # UNCROPPED: ground truth median  [0.9339, 0.7918, 0.8603, 0.8576]
           - type: dice_index
-            median: True
+            median: true
             presenter: print_vector
             reference:
               mean@overall tumor: 0.924003

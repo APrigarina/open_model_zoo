@@ -3,7 +3,18 @@ models:
 
     launchers:
       - framework: dlsdk
-        allow_reshape_input: True
+        allow_reshape_input: true
+        adapter:
+          type: human_pose_estimation_3d
+          features_3d_out: features
+          keypoints_heatmap_out: heatmaps
+          part_affinity_fields_out: pafs
+
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 256, 448
         adapter:
           type: human_pose_estimation_3d
           features_3d_out: features

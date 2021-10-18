@@ -5,8 +5,15 @@ models:
       - framework: dlsdk
         adapter: classification
 
+      - framework: opencv
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 1, 1, 16000
+        adapter: classification
+
     datasets:
-      - name: sound_classification
+      - name: des-53
 
         preprocessing:
           - type: clip_audio

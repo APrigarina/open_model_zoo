@@ -7,6 +7,18 @@ models:
           type: reid
           joining_method: concatenation
 
+      - framework: opencv
+        inputs:
+          - name: image_batch
+            type: INPUT
+            shape: 3, 160, 160
+          - name: phase_train
+            type: INPUT
+            shape: '1'
+        adapter:
+          type: reid
+          joining_method: concatenation
+
     datasets:
       - name: lfw_mtcnn_align
 
@@ -14,10 +26,10 @@ models:
           - type: auto_resize
           - type: flip
             mode: vertical
-            merge_with_original: True
+            merge_with_original: true
         metrics:
           - type: pairwise_accuracy_subsets
             min_score: best_train_threshold
-            distance_method: 'cosine_distance'
-            subtract_mean: True
+            distance_method: cosine_distance
+            subtract_mean: true
             reference: 0.9914
