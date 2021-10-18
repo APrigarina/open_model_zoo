@@ -6,6 +6,7 @@ models:
         inputs:
           - name: input
         adapter: classification
+
     datasets:
       - name: imagenet_1001_classes
         preprocessing:
@@ -30,6 +31,12 @@ models:
   - name: mobilenet-v1-0.25-128
     launchers:
       - framework: openvino
+        adapter: classification
+      - framework: opencv
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 3, 128, 128
         adapter: classification
 
     datasets:

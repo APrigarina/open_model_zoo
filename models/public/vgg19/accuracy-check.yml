@@ -2,9 +2,10 @@ models:
   - name: vgg19-cf
     launchers:
       - framework: caffe
-        model:   vgg19.prototxt
+        model: vgg19.prototxt
         weights: vgg19.caffemodel
         adapter: classification
+
     datasets:
       - name: imagenet_1000_classes
         preprocessing:
@@ -28,6 +29,12 @@ models:
   - name: vgg19
     launchers:
       - framework: openvino
+        adapter: classification
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 224, 224
         adapter: classification
 
     datasets:

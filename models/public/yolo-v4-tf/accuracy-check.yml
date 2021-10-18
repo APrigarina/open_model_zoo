@@ -11,22 +11,23 @@ models:
           classes: 80
           threshold: 0.001
           anchor_masks: [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
-          raw_output: True
+          raw_output: true
           output_format: HWB
-          do_reshape: True
+          do_reshape: true
           cells: [76, 38, 19]
           outputs:
             - conv2d_93
             - conv2d_101
             - conv2d_109
         inputs:
-          - name: 'image_input'
+          - name: image_input
             type: INPUT
             shape: [1, 608, 608, 3]
         outputs:
           - StatefulPartitionedCall/model/conv2d_93/BiasAdd
           - StatefulPartitionedCall/model/conv2d_101/BiasAdd
           - StatefulPartitionedCall/model/conv2d_109/BiasAdd
+
     datasets:
       - name: ms_coco_detection_80_class_without_background
         preprocessing:
@@ -59,7 +60,7 @@ models:
           - name: AP@0.5:0.05:95
             type: coco_precision
             max_detections: 100
-            threshold: '0.5:0.05:0.95'
+            threshold: 0.5:0.05:0.95
             reference: 0.5026
 
   - name: yolo-v4-tf
@@ -79,6 +80,25 @@ models:
             - Func/StatefulPartitionedCall/output/_544
             - Func/StatefulPartitionedCall/output/_542
             - Func/StatefulPartitionedCall/output/_543
+      - framework: opencv
+        inputs:
+          - name: image_input
+            type: INPUT
+            shape: 3, 608, 608
+        adapter:
+          type: yolo_v3
+          anchors: 12,16,19,36,40,28,36,75,76,55,72,146,142,110,192,243,459,401
+          num: 3
+          coords: 4
+          classes: 80
+          threshold: 0.001
+          anchor_masks: [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
+          raw_output: true
+          outputs:
+            - Func/StatefulPartitionedCall/output/_544
+            - Func/StatefulPartitionedCall/output/_542
+            - Func/StatefulPartitionedCall/output/_543
+
     datasets:
       - name: ms_coco_detection_80_class_without_background
         preprocessing:
@@ -108,5 +128,5 @@ models:
           - name: AP@0.5:0.05:95
             type: coco_precision
             max_detections: 100
-            threshold: '0.5:0.05:0.95'
+            threshold: 0.5:0.05:0.95
             reference: 0.5026

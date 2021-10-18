@@ -6,6 +6,7 @@ models:
         inputs:
           - name: input
         adapter: classification
+
     datasets:
       - name: imagenet_1001_classes
         preprocessing:
@@ -30,6 +31,12 @@ models:
   - name: inception-resnet-v2-tf
     launchers:
       - framework: openvino
+        adapter: classification
+      - framework: opencv
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 3, 299, 299
         adapter: classification
 
     datasets:

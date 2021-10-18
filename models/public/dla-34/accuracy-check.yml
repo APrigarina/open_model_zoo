@@ -18,11 +18,11 @@ models:
           - type: resize
             size: 256
             aspect_ratio_scale: greater
-            use_pillow: True
+            use_pillow: true
             interpolation: BILINEAR
           - type: crop
             size: 224
-            use_pillow: True
+            use_pillow: true
           - type: normalization
             mean: (123.675,116.28,103.53)
             std: (58.395,57.12,57.375)
@@ -41,6 +41,12 @@ models:
     launchers:
       - framework: openvino
         adapter: classification
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 224, 224
+        adapter: classification
 
     datasets:
       - name: imagenet_1000_classes
@@ -51,11 +57,11 @@ models:
           - type: resize
             size: 256
             aspect_ratio_scale: greater
-            use_pillow: True
+            use_pillow: true
             interpolation: BILINEAR
           - type: crop
             size: 224
-            use_pillow: True
+            use_pillow: true
         metrics:
           - name: accuracy@top1
             type: accuracy

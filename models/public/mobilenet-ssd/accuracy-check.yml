@@ -2,9 +2,10 @@ models:
   - name: mobilenet-ssd-cf
     launchers:
       - framework: caffe
-        model:   mobilenet-ssd.prototxt
+        model: mobilenet-ssd.prototxt
         weights: mobilenet-ssd.caffemodel
         adapter: ssd
+
     datasets:
       - name: VOC2007_detection
         preprocessing:
@@ -12,19 +13,25 @@ models:
             size: 300
           - type: normalization
             mean: 127.5
-            std:  127.5
+            std: 127.5
         postprocessing:
           - type: resize_prediction_boxes
         metrics:
           - type: map
             integral: 11point
-            ignore_difficult: True
+            ignore_difficult: true
             presenter: print_scalar
             reference: 0.67
 
   - name: mobilenet-ssd
     launchers:
       - framework: openvino
+        adapter: ssd
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 300, 300
         adapter: ssd
 
     datasets:
@@ -37,6 +44,6 @@ models:
         metrics:
           - type: map
             integral: 11point
-            ignore_difficult: True
+            ignore_difficult: true
             presenter: print_scalar
             reference: 0.67

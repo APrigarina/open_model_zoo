@@ -4,6 +4,13 @@ models:
       - framework: openvino
         adapter: segmentation
 
+      - framework: opencv
+        inputs:
+          - name: mul_1/placeholder_port_1
+            type: INPUT
+            shape: 3, 513, 513
+        adapter: segmentation
+
     datasets:
       - name: VOC2012_Segmentation
         preprocessing:
@@ -11,13 +18,13 @@ models:
             aspect_ratio_scale: fit_to_window
             size: 513
             interpolation: ANTIALIAS
-            use_pillow: True
+            use_pillow: true
           - type: padding
-            pad_value: '127.5,127.5,127.5'
+            pad_value: 127.5,127.5,127.5
             size: 513
         postprocessing:
           - type: resize_segmentation_mask
-            to_dst_image_size: True
+            to_dst_image_size: true
             apply_to: annotation
           - type: crop_or_pad
             size: 513
