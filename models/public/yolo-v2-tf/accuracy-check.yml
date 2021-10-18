@@ -3,16 +3,17 @@ models:
 
     launchers:
       - framework: tf
-        model:   yolo-v2.pb
+        model: yolo-v2.pb
         output_names: [conv2d_22/BiasAdd]
         adapter:
           type: yolo_v2
-          anchors: "0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282, 3.52778, 9.77052, 9.16828"
+          anchors: 0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282,
+            3.52778, 9.77052, 9.16828
           num: 5
           coords: 4
           classes: 80
           cells: 19
-          raw_output: True
+          raw_output: true
 
     datasets:
       - name: ms_coco_detection_80_class_without_background
@@ -29,7 +30,7 @@ models:
           - type: filter
             apply_to: prediction
             min_confidence: 0.001
-            remove_filtered: True
+            remove_filtered: true
           - type: nms
             overlap: 0.5
           - type: clip_boxes
@@ -52,7 +53,21 @@ models:
       - framework: openvino
         adapter:
           type: yolo_v2
-          anchors: "0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282, 3.52778, 9.77052, 9.16828"
+          anchors: 0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282,
+            3.52778, 9.77052, 9.16828
+          num: 5
+          coords: 4
+          classes: 80
+          cells: 19
+      - framework: opencv
+        inputs:
+          - name: image_input
+            type: INPUT
+            shape: 3, 608, 608
+        adapter:
+          type: yolo_v2
+          anchors: 0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282,
+            3.52778, 9.77052, 9.16828
           num: 5
           coords: 4
           classes: 80
@@ -70,7 +85,58 @@ models:
           - type: filter
             apply_to: prediction
             min_confidence: 0.001
-            remove_filtered: True
+            remove_filtered: true
+          - type: nms
+            overlap: 0.5
+          - type: clip_boxes
+            apply_to: prediction
+
+        metrics:
+          - type: map
+            integral: 11point
+            ignore_difficult: true
+            presenter: print_scalar
+            reference: 0.5315
+          - type: coco_precision
+            max_detections: 100
+            threshold: 0.5
+            reference: 0.565
+
+  - name: yolo-v2-tf
+
+    launchers:
+      - framework: opencv
+        backend: ocv
+        _model_type: tf
+        inputs:
+          - name: image_input
+            type: INPUT
+            shape: 3, 608, 608
+        adapter:
+          type: yolo_v2
+          anchors: 0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282,
+            3.52778, 9.77052, 9.16828
+          num: 5
+          coords: 4
+          classes: 80
+          cells: 19
+
+    datasets:
+      - name: ms_coco_detection_80_class_without_background
+
+        preprocessing:
+          - type: bgr_to_rgb
+          - type: normalization
+            std: 255.0
+          - type: resize
+            size: 608
+
+        postprocessing:
+          - type: resize_prediction_boxes
+          - type: filter
+            apply_to: prediction
+            min_confidence: 0.001
+            remove_filtered: true
           - type: nms
             overlap: 0.5
           - type: clip_boxes

@@ -2,9 +2,10 @@ models:
   - name: alexnet-cf
     launchers:
       - framework: caffe
-        model:   alexnet.prototxt
+        model: alexnet.prototxt
         weights: alexnet.caffemodel
         adapter: classification
+
     datasets:
       - name: imagenet_1000_classes
         preprocessing:
@@ -27,6 +28,19 @@ models:
   - name: alexnet
     launchers:
       - framework: openvino
+        adapter: classification
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 227, 227
+        adapter: classification
+      - framework: opencv
+        backend: ocv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 227, 227
         adapter: classification
 
     datasets:

@@ -5,12 +5,36 @@ models:
         allow_reshape_input: True
         adapter:
           type: ctc_greedy_decoder
-          alphabet: [' ', a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, '''']
+          alphabet: [' ', a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s,
+            t, u, v, w, x, y, z, "'"]
         inputs:
-          - name: 'audio_signal'
+          - name: audio_signal
             type: INPUT
             layout: NHWC
 
+      - framework: opencv
+        inputs:
+          - name: audio_signal
+            type: INPUT
+            shape: 64, 128
+        allow_reshape_input: true
+        adapter:
+          type: ctc_greedy_decoder
+          alphabet: [' ', a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s,
+            t, u, v, w, x, y, z, "'"]
+
+      - framework: opencv
+        backend: ocv
+        _model_net: onnx
+        inputs:
+          - name: audio_signal
+            type: INPUT
+            shape: 64, 128
+        allow_reshape_input: true
+        adapter:
+          type: ctc_greedy_decoder
+          alphabet: [' ', a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s,
+            t, u, v, w, x, y, z, "'"]
     datasets:
       - name: LibriSpeech_test_clean_npy_nemo
         reader: numpy_reader

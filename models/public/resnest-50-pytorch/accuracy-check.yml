@@ -5,6 +5,21 @@ models:
       - framework: openvino
         adapter: classification
 
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 224, 224
+        adapter: classification
+
+      - framework: opencv
+        backend: ocv
+        _model_type: onnx
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 224, 224
+        adapter: classification
     datasets:
       - name: imagenet_1000_classes
         reader: pillow_imread
@@ -13,10 +28,10 @@ models:
           - type: resize
             size: 256
             aspect_ratio_scale: greater
-            use_pillow: True
+            use_pillow: true
             interpolation: BICUBIC
           - type: crop
-            use_pillow: True
+            use_pillow: true
             size: 224
           - type: rgb_to_bgr
 

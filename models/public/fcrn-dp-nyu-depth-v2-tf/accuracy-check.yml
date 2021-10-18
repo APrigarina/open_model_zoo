@@ -3,6 +3,20 @@ models:
     launchers:
       - framework: openvino
         adapter: mono_depth
+      - framework: opencv
+        inputs:
+          - name: Placeholder
+            type: INPUT
+            shape: 3, 228, 304
+        adapter: mono_depth
+      - framework: opencv
+        backend: ocv
+        _model_type: tf
+        inputs:
+          - name: Placeholder
+            type: INPUT
+            shape: 3, 228, 304
+        adapter: mono_depth
     datasets:
       - name: NYU_Depth_V2
         preprocessing:

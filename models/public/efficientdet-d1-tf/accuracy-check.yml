@@ -3,6 +3,20 @@ models:
     launchers:
       - framework: openvino
         adapter: ssd
+      - framework: opencv
+        inputs:
+          - name: image_arrays
+            type: INPUT
+            shape: 3, 640, 640
+        adapter: ssd
+      - framework: opencv
+        backend: ocv
+        _model_type: tf
+        inputs:
+          - name: image_arrays
+            type: INPUT
+            shape: 3, 640, 640
+        adapter: ssd
     datasets:
       - name: ms_coco_detection_90_class_without_background
         preprocessing:

@@ -21,7 +21,7 @@ models:
             size: 256
             aspect_ratio_scale: greater
             interpolation: BILINEAR
-            use_pillow: True
+            use_pillow: true
 
           - type: crop
             size: 224
@@ -48,6 +48,12 @@ models:
       - framework: openvino
         adapter:
           type: classification
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 224, 224
+        adapter: classification
 
     datasets:
       - name: imagenet_1000_classes
@@ -58,10 +64,54 @@ models:
             size: 256
             aspect_ratio_scale: greater
             interpolation: BILINEAR
-            use_pillow: True
+            use_pillow: true
 
           - type: crop
             size: 224
+        metrics:
+          - name: accuracy@top1
+            type: accuracy
+            top_k: 1
+            reference: 0.573
+          - name: accuracy@top5
+            type: accuracy
+            top_k: 5
+            reference: 0.798
+
+  - name: hbonet-0.25
+
+    launchers:
+      - framework: opencv
+        backend: ocv
+        _model_type: onnx
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 224, 224
+        adapter: classification
+
+    datasets:
+      - name: imagenet_1000_classes
+        reader: opencv_imread
+
+        preprocessing:
+          - type: bgr_to_rgb
+
+          - type: resize
+            size: 256
+            aspect_ratio_scale: greater
+            interpolation: BILINEAR
+            use_pillow: true
+
+          - type: crop
+            size: 224
+
+          - type: normalization
+            std: 255
+
+          - type: normalization
+            mean: (0.485, 0.456, 0.406)
+            std: (0.229, 0.224, 0.225)
         metrics:
           - name: accuracy@top1
             type: accuracy

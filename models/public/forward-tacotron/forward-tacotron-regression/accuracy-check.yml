@@ -10,6 +10,29 @@ models:
           - name: 'data'
             type: INPUT
             layout: NHWC
+
+      - framework: opencv
+        inputs:
+          - name: 'data'
+            type: INPUT
+            shape: 805, 512
+        adapter:
+          type: multi_output_regression
+          outputs:
+            - mel
+
+      - framework: opencv
+        backend: ocv
+        _model_type: onnx
+        inputs:
+          - name: 'data'
+            type: INPUT
+            shape: 805, 512
+        adapter:
+          type: multi_output_regression
+          outputs:
+            - mel
+
     datasets:
       - name: tacotron-io-regression
         metrics:

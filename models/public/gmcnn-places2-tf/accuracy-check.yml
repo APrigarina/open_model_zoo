@@ -5,12 +5,12 @@ models:
         model: frozen_model.pb
         adapter: inpainting
         inputs:
-          - name: "Placeholder"
+          - name: Placeholder
             type: INPUT
-            value: '.*image'
-          - name: "Placeholder_1"
+            value: .*image
+          - name: Placeholder_1
             type: INPUT
-            value: '.*mask'
+            value: .*mask
 
     datasets:
       - name: inpainting_rect_masks
@@ -34,12 +34,52 @@ models:
       - framework: openvino
         adapter: inpainting
         inputs:
-          - name: "Placeholder"
+          - name: Placeholder
             type: INPUT
-            value: '.*image'
-          - name: "Placeholder_1"
+            value: .*image
+          - name: Placeholder_1
             type: INPUT
-            value: '.*mask'
+            value: .*mask
+      - framework: opencv
+        inputs:
+          - name: Placeholder
+            type: INPUT
+            shape: 1, 512, 680, 3
+          - name: Placeholder_1
+            type: INPUT
+            shape: 1, 512, 680, 1
+        adapter: inpainting
+
+    datasets:
+      - name: inpainting_rect_masks
+
+        metrics:
+          - type: psnr
+            scale_border: 0
+            presenter: print_vector
+            reference:
+              mean: 33.41
+              std: 4.47
+          - type: ssim
+            presenter: print_vector
+            reference:
+              mean: 0.991
+              std: 0.0079
+
+  - name: gmcnn-places2-tf
+
+    launchers:
+      - framework: opencv
+        backend: ocv
+        _model_type: tf
+        inputs:
+          - name: Placeholder
+            type: INPUT
+            shape: 1, 512, 680, 3
+          - name: Placeholder_1
+            type: INPUT
+            shape: 1, 512, 680, 1
+        adapter: inpainting
 
     datasets:
       - name: inpainting_rect_masks

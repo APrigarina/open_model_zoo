@@ -5,7 +5,7 @@ models:
         adapter:
           type: ctc_beam_search_decoder_with_lm
           probability_out: logits
-          logarithmic_prob: False
+          logarithmic_prob: false
           beam_size: 32
 
           # Use option "accuracy_check [...] --model_attributes <path_to_folder_with_downloaded_models>" to provide path to deepspeech-0.8.2-models.kenlm
@@ -24,13 +24,66 @@ models:
           - name: previous_state_h
             type: LSTM_INPUT
             value: 'cudnn_lstm/rnn/multi_rnn_cell/cell_0/cudnn_compatible_lstm_cell/GatherNd_1:0'
+      - framework: opencv
+        inputs:
+          - name: input_node
+            type: INPUT
+            shape: 16, 19, 26
+          - name: previous_state_h
+            type: LSTM_INPUT
+            value: 'cudnn_lstm/rnn/multi_rnn_cell/cell_0/cudnn_compatible_lstm_cell/GatherNd_1:0'
+            shape: 2048
+          - name: previous_state_c
+            type: LSTM_INPUT
+            value: 'cudnn_lstm/rnn/multi_rnn_cell/cell_0/cudnn_compatible_lstm_cell/GatherNd:0'
+            shape: 2048
+        adapter:
+          type: ctc_beam_search_decoder_with_lm
+          probability_out: logits
+          logarithmic_prob: false
+          beam_size: 32
+
+          # Use option "accuracy_check [...] --model_attributes <path_to_lm>" to provide path to deepspeech-0.8.2-models.kenlm
+          # deepspeech-0.8.2-models.kenlm is generated from deepspeech-0.8.2-models.scorer by scorer_to_kenlm.py script.
+          lm_file: deepspeech-0.8.2-models.kenlm
+          lm_alpha: 0.93128901720047
+          lm_beta: 1.1834137439727783
+          lm_vocabulary_offset: 941209108
+      - framework: opencv
+        backend: ocv
+        _model_type: tf
+        inputs:
+          - name: input_node
+            type: INPUT
+            shape: 16, 19, 26
+          - name: previous_state_h
+            type: LSTM_INPUT
+            value: 'cudnn_lstm/rnn/multi_rnn_cell/cell_0/cudnn_compatible_lstm_cell/GatherNd_1:0'
+            shape: 2048
+          - name: previous_state_c
+            type: LSTM_INPUT
+            value: 'cudnn_lstm/rnn/multi_rnn_cell/cell_0/cudnn_compatible_lstm_cell/GatherNd:0'
+            shape: 2048
+        adapter:
+          type: ctc_beam_search_decoder_with_lm
+          probability_out: logits
+          logarithmic_prob: false
+          beam_size: 32
+
+          # Use option "accuracy_check [...] --model_attributes <path_to_lm>" to provide path to deepspeech-0.8.2-models.kenlm
+          # deepspeech-0.8.2-models.kenlm is generated from deepspeech-0.8.2-models.scorer by scorer_to_kenlm.py script.
+          lm_file: deepspeech-0.8.2-models.kenlm
+          lm_alpha: 0.93128901720047
+          lm_beta: 1.1834137439727783
+          lm_vocabulary_offset: 941209108
+>>>>>>> 5c2c3b20c... AC: add opencv section to configs
     datasets:
       - name: librispeech-test-clean
         reader:
           type: wav_reader
         preprocessing:
           - type: audio_normalization
-            int16mode: True
+            int16mode: true
           - type: clip_audio
             duration: 512 samples
             overlap: 192 samples
@@ -38,10 +91,10 @@ models:
             base: 512
           - type: audio_spectrogram
             fftbase: 512
-            magnitude_squared: True
-            skip_channels: True
+            magnitude_squared: true
+            skip_channels: true
           - type: audio_triangle_filtering
-            filter_amplitudes: True
+            filter_amplitudes: true
             base: 257
             filterbank_channel_count: 40
             lower_frequency_limit: 20

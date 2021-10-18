@@ -5,8 +5,23 @@ models:
       - framework: openvino
         adapter: classification
 
+      - framework: opencv
+        inputs:
+          - name: result.1
+            type: INPUT
+            shape: 1, 1, 16000
+        adapter: classification
+
+      - framework: opencv
+        backend: ocv
+        _model_type: onnx
+        inputs:
+          - name: result.1
+            type: INPUT
+            shape: 1, 1, 16000
+        adapter: classification
     datasets:
-      - name: sound_classification
+      - name: des-53
 
         preprocessing:
           - type: clip_audio

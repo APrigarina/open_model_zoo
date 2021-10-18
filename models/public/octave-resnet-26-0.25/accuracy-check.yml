@@ -8,7 +8,7 @@ models:
         adapter: classification
         cpu_extensions: AUTO
         inputs:
-          - name: 'data'
+          - name: data
             type: INPUT
             shape: 3,224,224
 
@@ -46,6 +46,19 @@ models:
 
     launchers:
       - framework: openvino
+        adapter: classification
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 224, 224
+        adapter: classification
+      - framework: opencv
+        backend: ocv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 224, 224
         adapter: classification
 
     datasets:

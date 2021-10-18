@@ -14,10 +14,10 @@ models:
           - type: resize
             size: 256
             aspect_ratio_scale: greater
-            use_pillow: True
+            use_pillow: true
             interpolation: BILINEAR
           - type: crop
-            use_pillow: True
+            use_pillow: true
             size: 224
           - type: normalization
             std: [58.624, 57.12, 57.375]
@@ -38,6 +38,12 @@ models:
     launchers:
       - framework: openvino
         adapter: classification
+      - framework: opencv
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 3, 224, 224
+        adapter: classification
 
     datasets:
       - name: imagenet_1000_classes
@@ -47,12 +53,51 @@ models:
           - type: resize
             size: 256
             aspect_ratio_scale: greater
-            use_pillow: True
+            use_pillow: true
             interpolation: BILINEAR
           - type: crop
-            use_pillow: True
+            use_pillow: true
             size: 224
           - type: rgb_to_bgr
+
+        metrics:
+          - name: accuracy@top1
+            type: accuracy
+            top_k: 1
+            reference: 0.805
+          - name: accuracy@top5
+            type: accuracy
+            top_k: 5
+            reference: 0.9525
+
+  - name: repvgg-b3
+
+    launchers:
+      - framework: opencv
+        backend: ocv
+        _model_type: onnx
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 3, 224, 224
+        adapter: classification
+
+    datasets:
+      - name: imagenet_1000_classes
+        reader: pillow_imread
+
+        preprocessing:
+          - type: resize
+            size: 256
+            aspect_ratio_scale: greater
+            use_pillow: true
+            interpolation: BILINEAR
+          - type: crop
+            use_pillow: true
+            size: 224
+          - type: normalization
+            std: [58.624, 57.12, 57.375]
+            mean: [123.675, 116.28, 103.53]
 
         metrics:
           - name: accuracy@top1

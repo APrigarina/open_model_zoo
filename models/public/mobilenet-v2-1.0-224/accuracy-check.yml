@@ -7,6 +7,7 @@ models:
           - name: input
             type: INPUT
         adapter: classification
+
     datasets:
       - name: imagenet_1001_classes
         preprocessing:
@@ -32,6 +33,12 @@ models:
     launchers:
       - framework: openvino
         adapter: classification
+      - framework: opencv
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 3, 224, 224
+        adapter: classification
 
     datasets:
       - name: imagenet_1001_classes
@@ -40,6 +47,38 @@ models:
             central_fraction: 0.875
           - type: resize
             size: 224
+        metrics:
+          - name: accuracy@top1
+            type: accuracy
+            top_k: 1
+            reference: 0.7185
+          - name: accuracy@top5
+            type: accuracy
+            top_k: 5
+            reference: 0.9069
+
+  - name: mobilenet-v2-1.0-224
+    launchers:
+      - framework: opencv
+        backend: ocv
+        _model_type: tf
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 3, 224, 224
+        adapter: classification
+
+    datasets:
+      - name: imagenet_1001_classes
+        preprocessing:
+          - type: bgr_to_rgb
+          - type: crop
+            central_fraction: 0.875
+          - type: resize
+            size: 224
+          - type: normalization
+            mean: 127.5
+            std: 127.5
         metrics:
           - name: accuracy@top1
             type: accuracy

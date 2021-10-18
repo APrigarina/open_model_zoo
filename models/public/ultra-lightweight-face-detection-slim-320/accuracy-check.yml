@@ -6,8 +6,8 @@ models:
         model: ultra-lightweight-face-detection-slim-320.onnx
         adapter:
           type: ultra_lightweight_face_detection
-          boxes_out: "boxes"
-          scores_out: "scores"
+          boxes_out: boxes
+          scores_out: scores
 
     datasets:
       - name: wider
@@ -24,17 +24,17 @@ models:
         postprocessing:
           - type: nms
             overlap: 0.5
-            include_boundaries: False
+            include_boundaries: false
           - type: resize_prediction_boxes
           - type: filter
             apply_to: annotation
             height_range: 100
-            is_empty: True
+            is_empty: true
 
         metrics:
           - type: map
-            ignore_difficult: True
-            include_boundaries: False
+            ignore_difficult: true
+            include_boundaries: false
             reference: 0.8332
 
   - name: ultra-lightweight-face-detection-slim-320
@@ -43,8 +43,17 @@ models:
       - framework: openvino
         adapter:
           type: ultra_lightweight_face_detection
-          boxes_out: "boxes"
-          scores_out: "scores"
+          boxes_out: boxes
+          scores_out: scores
+      - framework: opencv
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 3, 240, 320
+        adapter:
+          type: ultra_lightweight_face_detection
+          boxes_out: boxes
+          scores_out: scores
 
     datasets:
       - name: wider
@@ -57,15 +66,58 @@ models:
         postprocessing:
           - type: nms
             overlap: 0.5
-            include_boundaries: False
+            include_boundaries: false
           - type: resize_prediction_boxes
           - type: filter
             apply_to: annotation
             height_range: 100
-            is_empty: True
+            is_empty: true
 
         metrics:
           - type: map
-            ignore_difficult: True
-            include_boundaries: False
+            ignore_difficult: true
+            include_boundaries: false
+            reference: 0.8332
+
+  - name: ultra-lightweight-face-detection-slim-320
+
+    launchers:
+      - framework: opencv
+        backend: ocv
+        _model_type: onnx
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 3, 240, 320
+        adapter:
+          type: ultra_lightweight_face_detection
+          boxes_out: boxes
+          scores_out: scores
+
+    datasets:
+      - name: wider
+
+        preprocessing:
+          - type: bgr_to_rgb
+          - type: resize
+            dst_width: 320
+            dst_height: 240
+          - type: normalization
+            mean: 127.0
+            std: 128.0
+
+        postprocessing:
+          - type: nms
+            overlap: 0.5
+            include_boundaries: false
+          - type: resize_prediction_boxes
+          - type: filter
+            apply_to: annotation
+            height_range: 100
+            is_empty: true
+
+        metrics:
+          - type: map
+            ignore_difficult: true
+            include_boundaries: false
             reference: 0.8332

@@ -2,7 +2,7 @@ models:
   - name: se-inception-cf
     launchers:
       - framework: caffe
-        model:   se-inception.prototxt
+        model: se-inception.prototxt
         weights: se-inception.caffemodel
         adapter: classification
 
@@ -29,6 +29,12 @@ models:
     launchers:
       - framework: openvino
         adapter: classification
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 224, 224
+        adapter: classification
 
     datasets:
       - name: imagenet_1000_classes_2015
@@ -37,6 +43,36 @@ models:
             size: 256
           - type: crop
             size: 224
+        metrics:
+          - name: accuracy@top1
+            type: accuracy
+            top_k: 1
+            reference: 0.75996
+          - name: accuracy@top5
+            type: accuracy
+            top_k: 5
+            reference: 0.92964
+
+  - name: se-inception
+    launchers:
+      - framework: opencv
+        backend: ocv
+        _model_type: caffe
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 224, 224
+        adapter: classification
+
+    datasets:
+      - name: imagenet_1000_classes_2015
+        preprocessing:
+          - type: resize
+            size: 256
+          - type: crop
+            size: 224
+          - type: normalization
+            mean: 104, 117, 123
         metrics:
           - name: accuracy@top1
             type: accuracy

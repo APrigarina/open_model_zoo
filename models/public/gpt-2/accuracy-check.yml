@@ -5,11 +5,11 @@ models:
         model: gpt-2.onnx
         adapter:
           type: common_language_modeling
-          logits_output: "output"
+          logits_output: output
         inputs:
-          - name: "input"
+          - name: input
             type: INPUT
-            value: "input_ids"
+            value: input_ids
             precision: I64
 
     datasets:
@@ -19,8 +19,8 @@ models:
           features:
             - input_ids
         metrics:
-          - type: 'perplexity'
-            name: 'Perplexity'
+          - type: perplexity
+            name: Perplexity
             reference: 0.29
 
   - name: gpt-2
@@ -28,12 +28,20 @@ models:
       - framework: openvino
         adapter:
           type: common_language_modeling
-          logits_output: "output"
+          logits_output: output
         inputs:
-          - name: "input"
+          - name: input
             type: INPUT
-            value: "input_ids"
+            value: input_ids
             precision: I32
+      - framework: opencv
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 1, 1024
+        adapter:
+          type: common_language_modeling
+          logits_output: output
 
     datasets:
       - name: WikiText_2_raw_gpt2
@@ -42,6 +50,29 @@ models:
           features:
             - input_ids
         metrics:
-          - type: 'perplexity'
-            name: 'Perplexity'
+          - type: perplexity
+            name: Perplexity
+            reference: 0.29
+
+  - name: gpt-2
+    launchers:
+      - framework: opencv
+        _model_type: onnx
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 1, 1024
+        adapter:
+          type: common_language_modeling
+          logits_output: output
+
+    datasets:
+      - name: WikiText_2_raw_gpt2
+        reader:
+          type: annotation_features_extractor
+          features:
+            - input_ids
+        metrics:
+          - type: perplexity
+            name: Perplexity
             reference: 0.29

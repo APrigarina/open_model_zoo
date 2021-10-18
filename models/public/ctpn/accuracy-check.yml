@@ -8,6 +8,29 @@ models:
           bbox_pred_out: 'rpn_bbox_pred/Reshape_1'
         allow_reshape_input: True
 
+      - framework: opencv
+        inputs:
+          - name: Placeholder
+            type: INPUT
+            shape: 3, 600, 600
+        adapter:
+          type: ctpn_text_detection
+          cls_prob_out: Reshape_2/Transpose
+          bbox_pred_out: rpn_bbox_pred/Reshape_1/Transpose
+        allow_reshape_input: true
+
+      - framework: opencv
+        backend: ocv
+        _model_type: tf
+        inputs:
+          - name: Placeholder
+            type: INPUT
+            shape: 3, 600, 600
+        adapter:
+          type: ctpn_text_detection
+          cls_prob_out: Reshape_2/Transpose
+          bbox_pred_out: rpn_bbox_pred/Reshape_1/Transpose
+        allow_reshape_input: true
     datasets:
       - name: ICDAR2013_detection
 
@@ -28,21 +51,21 @@ models:
         metrics:
           - type: focused_text_precision
             name: precision
-            ignore_difficult: True
+            ignore_difficult: true
             area_recall_constrain: 0.8
             area_precision_constrain: 0.4
             reference: 0.73
 
           - type: focused_text_recall
             name: recall
-            ignore_difficult: True
+            ignore_difficult: true
             area_recall_constrain: 0.8
             area_precision_constrain: 0.4
             reference: 0.743379
 
           - type: focused_text_hmean
             name: hmean
-            ignore_difficult: True
+            ignore_difficult: true
             area_recall_constrain: 0.8
             area_precision_constrain: 0.4
             reference: 0.7367
