@@ -11,16 +11,22 @@ models:
           - name: IteratorGetNext
             type: INPUT
 
+      - framework: opencv
+        inputs:
+          - name: IteratorGetNext:0
+            type: INPUT
+            shape: 1, 224, 224, 3
+        adapter: classification
     datasets:
       - name: imagenet_1000_classes
         preprocessing:
           - type: bgr_to_rgb
           - type: crop
             central_fraction: 0.875
-            use_pillow: True
+            use_pillow: true
           - type: resize
             size: 224
-            use_pillow: True
+            use_pillow: true
             interpolation: BICUBIC
         metrics:
           - name: accuracy@top1
@@ -43,10 +49,10 @@ models:
         preprocessing:
           - type: crop
             central_fraction: 0.875
-            use_pillow: True
+            use_pillow: true
           - type: resize
             size: 224
-            use_pillow: True
+            use_pillow: true
             interpolation: BICUBIC
         metrics:
           - name: accuracy@top1

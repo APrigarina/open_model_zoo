@@ -1,5 +1,5 @@
 models:
-  - name:  faster_rcnn_resnet101_coco
+  - name: faster_rcnn_resnet101_coco
     launchers:
       - framework: dlsdk
         adapter: ssd
@@ -8,6 +8,12 @@ models:
             type: CONST_INPUT
             value: [[600, 1024, 1]]
 
+      - framework: opencv
+        inputs:
+          - name: image_tensor
+            type: INPUT
+            shape: 1, 600, 1024, 3
+        adapter: classification
     datasets:
       - name: ms_coco_detection_91_classes
         metrics:

@@ -9,6 +9,12 @@ models:
           regression_out: regression
 
 
+      - framework: opencv
+        inputs:
+          - name: input.1
+            type: INPUT
+            shape: 1, 3, 512, 512
+        adapter: classification
     datasets:
       - name: ms_coco_detection_80_class_without_background
         preprocessing:
@@ -20,7 +26,7 @@ models:
           - type: filter
             apply_to: prediction
             min_confidence: 0.3
-            remove_filtered: True
+            remove_filtered: true
 
         metrics:
           - type: map

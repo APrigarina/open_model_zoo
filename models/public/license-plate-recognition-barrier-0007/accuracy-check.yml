@@ -5,6 +5,12 @@ models:
       - framework: dlsdk
         adapter: lpr
 
+      - framework: opencv
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 1, 24, 94, 3
+        adapter: classification
     datasets:
       - name: synthetic_chinese_license_plates
 
