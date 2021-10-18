@@ -12,6 +12,12 @@ models:
             type: CONST_INPUT
             value: [[800, 1365, 1]]
 
+      - framework: opencv
+        inputs:
+          - name: image_tensor
+            type: INPUT
+            shape: 1, 800, 1365, 3
+        adapter: classification
     datasets:
       - name: ms_coco_mask_rcnn_short_91_classes
 

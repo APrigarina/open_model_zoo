@@ -3,6 +3,12 @@ models:
     launchers:
       - framework: dlsdk
         adapter: mono_depth
+      - framework: opencv
+        inputs:
+          - name: Placeholder
+            type: INPUT
+            shape: 1, 228, 304, 3
+        adapter: classification
     datasets:
       - name: NYU_Depth_V2
         preprocessing:

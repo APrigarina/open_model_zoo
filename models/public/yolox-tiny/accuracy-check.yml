@@ -4,6 +4,12 @@ models:
       - framework: onnx_runtime
         model: yolox-tiny.onnx
         adapter: yolox
+      - framework: opencv
+        inputs:
+          - name: images
+            type: INPUT
+            shape: 1, 3, 416, 416
+        adapter: classification
     datasets:
       - name: ms_coco_detection_80_class_without_background
 
@@ -14,13 +20,13 @@ models:
             size: 416
           - type: padding
             pad_type: right_bottom
-            pad_value: '114, 114, 114'
+            pad_value: 114, 114, 114
           - type: normalization
             mean: [123.675, 116.28, 103.53]
             std: [58.395, 57.12, 57.375]
         postprocessing:
           - type: resize_prediction_boxes
-            rescale: True
+            rescale: true
           - type: nms
             overlap: 0.65
           - type: clip_boxes
@@ -39,7 +45,7 @@ models:
           - name: AP@0.5:0.05:95
             type: coco_precision
             max_detections: 100
-            threshold: '0.5:0.05:0.95'
+            threshold: 0.5:0.05:0.95
             reference: 0.3182
 
   - name: yolox-tiny
@@ -55,10 +61,10 @@ models:
             size: 416
           - type: padding
             pad_type: right_bottom
-            pad_value: '114, 114, 114'
+            pad_value: 114, 114, 114
         postprocessing:
           - type: resize_prediction_boxes
-            rescale: True
+            rescale: true
           - type: nms
             overlap: 0.65
           - type: clip_boxes
@@ -77,5 +83,5 @@ models:
           - name: AP@0.5:0.05:95
             type: coco_precision
             max_detections: 100
-            threshold: '0.5:0.05:0.95'
+            threshold: 0.5:0.05:0.95
             reference: 0.3182

@@ -6,9 +6,15 @@ models:
         model: ultra-lightweight-face-detection-rfb-320.onnx
         adapter:
           type: ultra_lightweight_face_detection
-          boxes_out: "boxes"
-          scores_out: "scores"
+          boxes_out: boxes
+          scores_out: scores
 
+      - framework: opencv
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 1, 3, 240, 320
+        adapter: classification
     datasets:
       - name: wider
 
@@ -24,17 +30,17 @@ models:
         postprocessing:
           - type: nms
             overlap: 0.5
-            include_boundaries: False
+            include_boundaries: false
           - type: resize_prediction_boxes
           - type: filter
             apply_to: annotation
             height_range: 100
-            is_empty: True
+            is_empty: true
 
         metrics:
           - type: map
-            ignore_difficult: True
-            include_boundaries: False
+            ignore_difficult: true
+            include_boundaries: false
             reference: 0.8478
 
   - name: ultra-lightweight-face-detection-rfb-320
@@ -43,8 +49,8 @@ models:
       - framework: dlsdk
         adapter:
           type: ultra_lightweight_face_detection
-          boxes_out: "boxes"
-          scores_out: "scores"
+          boxes_out: boxes
+          scores_out: scores
 
     datasets:
       - name: wider
@@ -57,15 +63,15 @@ models:
         postprocessing:
           - type: nms
             overlap: 0.5
-            include_boundaries: False
+            include_boundaries: false
           - type: resize_prediction_boxes
           - type: filter
             apply_to: annotation
             height_range: 100
-            is_empty: True
+            is_empty: true
 
         metrics:
           - type: map
-            ignore_difficult: True
-            include_boundaries: False
+            ignore_difficult: true
+            include_boundaries: false
             reference: 0.8478

@@ -1,14 +1,20 @@
 models:
-  - name:  ssd-resnet34-1200-onnx
+  - name: ssd-resnet34-1200-onnx
     launchers:
       - framework: dlsdk
         adapter:
           type: ssd_onnx
-          scores_out: '.*scores*'
-          labels_out: '.*labels*'
-          bboxes_out: '.*bboxes*'
+          scores_out: .*scores*
+          labels_out: .*labels*
+          bboxes_out: .*bboxes*
 
 
+      - framework: opencv
+        inputs:
+          - name: image
+            type: INPUT
+            shape: 1, 3, 1200, 1200
+        adapter: classification
     datasets:
       - name: ms_coco_detection_80_class_with_background
         preprocessing:

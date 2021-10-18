@@ -2,10 +2,16 @@ models:
   - name: se-inception-cf
     launchers:
       - framework: caffe
-        model:   se-inception.prototxt
+        model: se-inception.prototxt
         weights: se-inception.caffemodel
         adapter: classification
 
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 1, 3, 224, 224
+        adapter: classification
     datasets:
       - name: imagenet_1000_classes_2015
         preprocessing:

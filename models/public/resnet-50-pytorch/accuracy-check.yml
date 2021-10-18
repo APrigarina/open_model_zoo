@@ -10,6 +10,12 @@ models:
             type: INPUT
             shape: 1,3,224,224
 
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 1, 3, 224, 224
+        adapter: classification
     datasets:
       - name: imagenet_1000_classes
         reader: pillow_imread
@@ -63,11 +69,11 @@ models:
           - type: resize
             size: 256
             aspect_ratio_scale: greater
-            use_pillow: True
+            use_pillow: true
             interpolation: BILINEAR
           - type: crop
             size: 224
-            use_pillow: True
+            use_pillow: true
           # Image channels must be swapped, because "pillow_imread" reads in RGB, but converted model expect BGR
           - type: rgb_to_bgr
           # Reference metric from PyTorch (pytorch v1.0.1, torchvision v0.2.2) top-1 76.13% top-5 92.862%
