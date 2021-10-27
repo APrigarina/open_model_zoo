@@ -9,7 +9,7 @@ models:
           - name: 1:mul_1
             type: INPUT
             shape: 1, 513, 513, 3
-        adapter: classification
+        adapter: segmentation
     datasets:
       - name: VOC2012_Segmentation
         preprocessing:

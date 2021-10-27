@@ -15,7 +15,9 @@ models:
           - name: phase_train
             type: INPUT
             shape: '1'
-        adapter: classification
+        adapter:
+          type: reid
+          joining_method: concatenation
     datasets:
       - name: lfw_mtcnn_align
 

@@ -9,12 +9,7 @@ models:
           conf_out: conf
           mask_out: mask
           proto_out: proto
-      - framework: opencv
-        inputs:
-          - name: input.1
-            type: INPUT
-            shape: 1, 3, 550, 550
-        adapter: classification
+
     datasets:
       - name: ms_coco_mask_rcnn_short_80_classes_without_background
         reader: pillow_imread
@@ -37,6 +32,17 @@ models:
   - name: yolact-resnet50-fpn-pytorch
     launchers:
       - framework: dlsdk
+        adapter:
+          type: yolact
+          boxes_out: boxes
+          conf_out: conf
+          mask_out: mask
+          proto_out: proto
+      - framework: opencv
+        inputs:
+          - name: input.1
+            type: INPUT
+            shape: 1, 3, 550, 550
         adapter:
           type: yolact
           boxes_out: boxes

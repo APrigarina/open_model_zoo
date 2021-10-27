@@ -8,7 +8,7 @@ models:
           - name: Placeholder
             type: INPUT
             shape: 1, 200, 300, 3
-        adapter: classification
+        adapter: reid
     datasets:
       - name: pitts30k_val
         reader: pillow_imread
