@@ -13,7 +13,11 @@ models:
           - name: input.1
             type: INPUT
             shape: 1, 3, 384, 384
-        adapter: classification
+        adapter:
+          type: ctdet
+          center_heatmap_out: center_heatmap
+          width_height_out: width_height
+          regression_out: regression
     datasets:
       - name: ms_coco_detection_80_class_without_background
         preprocessing:

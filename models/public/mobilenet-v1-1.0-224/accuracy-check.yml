@@ -5,12 +5,7 @@ models:
         model: mobilenet-v1-1.0-224.prototxt
         weights: mobilenet-v1-1.0-224.caffemodel
         adapter: classification
-      - framework: opencv
-        inputs:
-          - name: data
-            type: INPUT
-            shape: 1, 3, 224, 224
-        adapter: classification
+
     datasets:
       - name: imagenet_1000_classes
         preprocessing:
@@ -34,6 +29,12 @@ models:
   - name: mobilenet-v1-1.0-224
     launchers:
       - framework: dlsdk
+        adapter: classification
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 1, 3, 224, 224
         adapter: classification
 
     datasets:

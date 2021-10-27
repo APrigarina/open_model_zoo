@@ -11,12 +11,6 @@ models:
           - name: IteratorGetNext
             type: INPUT
 
-      - framework: opencv
-        inputs:
-          - name: 0:sub
-            type: INPUT
-            shape: 1, 456, 456, 3
-        adapter: classification
     datasets:
       - name: imagenet_1000_classes
         preprocessing:
@@ -42,6 +36,12 @@ models:
 
     launchers:
       - framework: dlsdk
+        adapter: classification
+      - framework: opencv
+        inputs:
+          - name: 0:sub
+            type: INPUT
+            shape: 1, 456, 456, 3
         adapter: classification
 
     datasets:

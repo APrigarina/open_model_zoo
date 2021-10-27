@@ -21,12 +21,15 @@ models:
             type: INPUT
             shape: 1, 1, 256, 256
           - name: user_ab
-            type: INPUT
+            type: CONST_INPUT
             shape: 1, 2, 256, 256
           - name: user_map
-            type: INPUT
+            type: CONST_INPUT
             shape: 1, 1, 256, 256
-        adapter: classification
+        adapter:
+          type: image_processing
+          std: 1
+          cast_to_uint8: false
     datasets:
       - name: imagenet_colorization
         subsample_size: 2000

@@ -10,12 +10,6 @@ models:
             type: INPUT
             shape: 1,3,224,224
 
-      - framework: opencv
-        inputs:
-          - name: data
-            type: INPUT
-            shape: 1, 3, 224, 224
-        adapter: classification
     datasets:
       - name: imagenet_1000_classes
         reader: opencv_imread
@@ -54,6 +48,12 @@ models:
       - framework: dlsdk
         adapter:
           type: classification
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 1, 3, 224, 224
+        adapter: classification
 
     datasets:
       - name: imagenet_1000_classes

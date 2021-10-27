@@ -25,12 +25,7 @@ models:
         outputs:
           - conv2d_20/BiasAdd
           - conv2d_17/BiasAdd
-      - framework: opencv
-        inputs:
-          - name: image_input
-            type: INPUT
-            shape: 1, 416, 416, 3
-        adapter: classification
+
     datasets:
       - name: ms_coco_detection_80_class_without_background
         preprocessing:
@@ -69,6 +64,23 @@ models:
   - name: yolo-v4-tiny-tf
     launchers:
       - framework: dlsdk
+        adapter:
+          type: yolo_v3
+          anchors: 10,14,23,27,37,58,81,82,135,169,344,319
+          num: 2
+          coords: 4
+          classes: 80
+          threshold: 0.001
+          anchor_masks: [[1, 2, 3], [3, 4, 5]]
+          raw_output: true
+          outputs:
+            - conv2d_20/BiasAdd/Add
+            - conv2d_17/BiasAdd/Add
+      - framework: opencv
+        inputs:
+          - name: image_input
+            type: INPUT
+            shape: 1, 416, 416, 3
         adapter:
           type: yolo_v3
           anchors: 10,14,23,27,37,58,81,82,135,169,344,319

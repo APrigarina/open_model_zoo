@@ -7,12 +7,7 @@ models:
           - name: input
             type: INPUT
         adapter: classification
-      - framework: opencv
-        inputs:
-          - name: input
-            type: INPUT
-            shape: 1, 224, 224, 3
-        adapter: classification
+
     datasets:
       - name: imagenet_1001_classes
         preprocessing:
@@ -37,6 +32,12 @@ models:
   - name: mobilenet-v2-1.0-224
     launchers:
       - framework: dlsdk
+        adapter: classification
+      - framework: opencv
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 1, 224, 224, 3
         adapter: classification
 
     datasets:

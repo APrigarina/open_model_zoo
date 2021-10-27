@@ -8,7 +8,7 @@ models:
           - name: Placeholder
             type: INPUT
             shape: 1, 228, 304, 3
-        adapter: classification
+        adapter: mono_depth
     datasets:
       - name: NYU_Depth_V2
         preprocessing:
