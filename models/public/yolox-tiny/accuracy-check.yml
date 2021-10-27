@@ -4,12 +4,7 @@ models:
       - framework: onnx_runtime
         model: yolox-tiny.onnx
         adapter: yolox
-      - framework: opencv
-        inputs:
-          - name: images
-            type: INPUT
-            shape: 1, 3, 416, 416
-        adapter: classification
+
     datasets:
       - name: ms_coco_detection_80_class_without_background
 
@@ -51,6 +46,12 @@ models:
   - name: yolox-tiny
     launchers:
       - framework: dlsdk
+        adapter: yolox
+      - framework: opencv
+        inputs:
+          - name: images
+            type: INPUT
+            shape: 1, 3, 416, 416
         adapter: yolox
     datasets:
       - name: ms_coco_detection_80_class_without_background

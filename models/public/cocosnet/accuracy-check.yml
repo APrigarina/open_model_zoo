@@ -33,7 +33,6 @@ evaluations:
             - name: ref_seg_map
               type: INPUT
               shape: 1, 151, 256, 256
-          adapter: classification
       datasets:
         - name: cocosnet_image_translation
 

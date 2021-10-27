@@ -15,7 +15,7 @@ models:
           - name: data
             type: INPUT
             shape: 1, 3, 300, 300
-        adapter: classification
+        adapter: ssd
     datasets:
       - name: wider
 

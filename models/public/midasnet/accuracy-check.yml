@@ -8,7 +8,7 @@ models:
           - name: image
             type: INPUT
             shape: 1, 3, 384, 384
-        adapter: classification
+        adapter: mono_depth
     datasets:
       - name: ReDWeb_V1
         preprocessing:
