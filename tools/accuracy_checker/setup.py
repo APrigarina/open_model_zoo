@@ -96,19 +96,19 @@ def prepare_requirements():
 
 _requirements = prepare_requirements()
 
-# try:
-importlib.import_module('cv2')
-# except ImportError as opencv_import_error:
-#     if platform.processor() != 'aarch64':
-#         warnings.warn(
-#             "Problem with cv2 import: \n{}\n opencv-python will be added to requirements".format(opencv_import_error)
-#         )
-#         _requirements.append('opencv-python')
-#     else:
-#         warnings.warn(
-#             "Problem with cv2 import: \n{}".format(opencv_import_error)
-#             + "\n Probably due to unsuitable numpy version, will be updated")
-#         check_and_update_numpy()
+try:
+    importlib.import_module('cv2')
+except ImportError as opencv_import_error:
+    if platform.processor() != 'aarch64':
+        warnings.warn(
+            "Problem with cv2 import: \n{}\n opencv-python will be added to requirements".format(opencv_import_error)
+        )
+        # _requirements.append('opencv-python')
+    else:
+        warnings.warn(
+            "Problem with cv2 import: \n{}".format(opencv_import_error)
+            + "\n Probably due to unsuitable numpy version, will be updated")
+        check_and_update_numpy()
 
 if is_arm:
     install_dependencies_with_pip(_requirements)
