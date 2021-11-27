@@ -36,7 +36,13 @@ models:
         inputs:
           - name: input
             type: INPUT
-            shape: 1, 128, 128, 3
+            shape: 3, 128, 128
+        adapter: classification
+      - framework: opencv
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 3, 128, 128
         adapter: classification
 
     datasets:

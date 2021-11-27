@@ -9,7 +9,15 @@ models:
         inputs:
           - name: data
             type: INPUT
-            shape: 1, 3, 304, 304
+            shape: 3, 304, 304
+        adapter: ssd
+
+      - framework: opencv
+        backend: ocv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 3, 304, 304
         adapter: ssd
     datasets:
       - name: ms_coco_detection_80_class_with_background
