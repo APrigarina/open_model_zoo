@@ -39,9 +39,16 @@ models:
         adapter: classification
       - framework: opencv
         inputs:
-          - name: 0:sub
+          - name: sub/placeholder_port_0
             type: INPUT
-            shape: 1, 456, 456, 3
+            shape: 3, 456, 456
+        adapter: classification
+      - framework: opencv
+        backend: ocv
+        inputs:
+          - name: sub/placeholder_port_0
+            type: INPUT
+            shape: 3, 456, 456
         adapter: classification
 
     datasets:

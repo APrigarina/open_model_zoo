@@ -41,7 +41,14 @@ models:
         inputs:
           - name: IteratorGetNext:0
             type: INPUT
-            shape: 1, 224, 224, 3
+            shape: 3, 224, 224
+        adapter: classification
+      - framework: opencv
+        backend: ocv
+        inputs:
+          - name: IteratorGetNext:0
+            type: INPUT
+            shape: 3, 224, 224
         adapter: classification
 
     datasets:
