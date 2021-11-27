@@ -9,7 +9,15 @@ models:
         inputs:
           - name: actual_input_1
             type: INPUT
-            shape: 1, 3, 128, 128
+            shape: 3, 128, 128
+        adapter: classification
+
+      - framework: opencv
+        backend: ocv
+        inputs:
+          - name: actual_input_1
+            type: INPUT
+            shape: 3, 128, 128
         adapter: classification
     datasets:
       - name: antispoof_test_data

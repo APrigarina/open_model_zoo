@@ -11,7 +11,20 @@ models:
         inputs:
           - name: image_batch
             type: INPUT
-            shape: 1, 160, 160, 3
+            shape: 3, 160, 160
+          - name: phase_train
+            type: INPUT
+            shape: '1'
+        adapter:
+          type: reid
+          joining_method: concatenation
+
+      - framework: opencv
+        backend: ocv
+        inputs:
+          - name: image_batch
+            type: INPUT
+            shape: 3, 160, 160
           - name: phase_train
             type: INPUT
             shape: '1'

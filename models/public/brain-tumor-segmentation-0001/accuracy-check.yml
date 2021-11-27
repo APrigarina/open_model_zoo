@@ -11,7 +11,17 @@ models:
         inputs:
           - name: data_crop
             type: INPUT
-            shape: 1, 4, 128, 128, 128
+            shape: 4, 128, 128, 128
+        adapter:
+          type: brain_tumor_segmentation
+          make_argmax: true
+
+      - framework: opencv
+        backend: ocv
+        inputs:
+          - name: data_crop
+            type: INPUT
+            shape: 4, 128, 128, 128
         adapter:
           type: brain_tumor_segmentation
           make_argmax: true

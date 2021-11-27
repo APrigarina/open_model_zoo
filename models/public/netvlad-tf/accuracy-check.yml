@@ -7,7 +7,14 @@ models:
         inputs:
           - name: Placeholder
             type: INPUT
-            shape: 1, 200, 300, 3
+            shape: 3, 200, 300
+        adapter: reid
+      - framework: opencv
+        backend: ocv
+        inputs:
+          - name: Placeholder
+            type: INPUT
+            shape: 3, 200, 300
         adapter: reid
     datasets:
       - name: pitts30k_val

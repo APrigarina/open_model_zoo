@@ -36,7 +36,14 @@ models:
         inputs:
           - name: input
             type: INPUT
-            shape: 1, 224, 224, 3
+            shape: 3, 224, 224
+        adapter: classification
+      - framework: opencv
+        backend: ocv
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 3, 224, 224
         adapter: classification
 
     datasets:
