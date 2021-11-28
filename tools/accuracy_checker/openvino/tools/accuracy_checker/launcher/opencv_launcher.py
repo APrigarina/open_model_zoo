@@ -210,6 +210,12 @@ class OpenCVLauncher(Launcher):
                 onnx_list = list(Path(model_dir).glob('*.onnx'))
             return onnx_list
 
+        def get_caffe(model_dir):
+            caffe_list = list(Path(model_dir).glob('{}.caffemodel'.format(self._model_name)))
+            if not caffe_list:
+                caffe_list = list(Path(model_dir).glob('*.caffemodel'))
+            return caffe_list
+
         def get_model():
             model = Path(self.get_value_from_config('model'))
             model_is_blob = self.get_value_from_config('_model_is_blob')
@@ -227,6 +233,8 @@ class OpenCVLauncher(Launcher):
                     model_list = get_blob(model)
                 if not model_list:
                     model_list = get_onnx(model)
+                if not model_list:
+                    model_list = get_caffe(model)
             if not model_list:
                 raise ConfigError('suitable model is not found')
             if len(model_list) != 1:
@@ -241,9 +249,15 @@ class OpenCVLauncher(Launcher):
         weights = self.get_value_from_config('weights')
         if (weights is None or Path(weights).is_dir()) and model.suffix != '.onnx':
             weights_dir = weights or model.parent
-            weights = Path(weights_dir) / model.name.replace('xml', 'bin')
+            weights_list = list(Path(weights_dir).glob('*.bin'))
+            if not weights_list:
+                if model.suffix == '.caffemodel':
+                    weights_list = list(Path(weights_dir).glob('*.prototxt'))
+            if weights_list:
+                weights = weights_list[0]
         if weights is not None:
-            accepted_weights_suffixes = ['.bin']
+            weights = weights_list[0]
+            accepted_weights_suffixes = ['.bin', '.prototxt']
             if weights.suffix not in accepted_weights_suffixes:
                 raise ConfigError('Weights with following suffixes are allowed: {}'.format(accepted_weights_suffixes))
             print_info('Found weights {}'.format(get_path(weights)))
