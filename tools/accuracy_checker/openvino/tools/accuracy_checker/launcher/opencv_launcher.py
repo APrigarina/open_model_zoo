@@ -20,7 +20,7 @@ import numpy as np
 import cv2
 from pathlib import Path
 
-from ..config import PathField, StringField, ConfigError, ListInputsField
+from ..config import PathField, StringField, ConfigError, ListInputsField, BoolField
 from ..logging import print_info
 from .launcher import Launcher, LauncherConfigValidator
 from ..utils import get_or_parse_value, get_path
@@ -74,7 +74,8 @@ class OpenCVLauncher(Launcher):
                 regex=BACKEND_REGEX, choices=OpenCVLauncher.OPENCV_BACKENDS.keys(),
                 optional=True, default='IE',
                 description="Backend name: {}".format(', '.join(OpenCVLauncher.OPENCV_BACKENDS.keys()))),
-            'inputs': ListInputsField(optional=False, description="Inputs.")
+            'inputs': ListInputsField(optional=False, description="Inputs."),
+            'allow_reshape_input': BoolField(optional=True, default=False, description="Allows reshape input.")
         })
 
         return parameters
@@ -103,6 +104,7 @@ class OpenCVLauncher(Launcher):
         if not self._delayed_model_loading:
             self.model, self.weights = self.automatic_model_search()
             self.network = self.create_network(self.model, self.weights)
+            self.allow_reshape_input = self.get_value_from_config('allow_reshape_input')
             self._inputs_shapes = self.get_inputs_from_config(self.config)
             self.network.setInputsNames(list(self._inputs_shapes.keys()))
             self.output_names = self.network.getUnconnectedOutLayersNames()
@@ -130,41 +132,45 @@ class OpenCVLauncher(Launcher):
     def output_blob(self):
         return next(iter(self.output_names))
 
-    # def _data_to_blob(self, layer_shape, data, layout):
-    #     data_shape = np.shape(data)
-    #     if len(layer_shape) == 4:
-    #         if len(data_shape) == 5:
-    #             data = data[0]
-    #         if len(data_shape) < 4:
-    #             if len(np.squeeze(np.zeros(layer_shape))) == len(np.squeeze(np.zeros(data_shape))):
-    #                 return np.resize(data, layer_shape)
-    #         return np.transpose(data, layout) if layout is not None else data
-    #     if len(layer_shape) == 2:
-    #         if len(data_shape) == 1:
-    #             return np.transpose([data])
-    #         if len(data_shape) > 2:
-    #             if all(dim == 1 for dim in layer_shape) and all(dim == 1 for dim in data_shape):
-    #                 return np.resize(data, layer_shape)
-    #             if len(np.squeeze(np.zeros(layer_shape))) == len(np.squeeze(np.zeros(data_shape))):
-    #                 return np.resize(data, layer_shape)
-    #     if len(layer_shape) == 3 and len(data_shape) == 4:
-    #         return np.transpose(data, layout)[0] if layout is not None else data[0]
-    #     if layout is not None and len(layer_shape) == len(layout):
-    #         return np.transpose(data, layout)
-    #     if (
-    #             len(layer_shape) == 1 and len(data_shape) > 1 and
-    #             len(np.squeeze(np.zeros(layer_shape))) == len(np.squeeze(np.zeros(data_shape)))
-    #     ):
-    #         return np.resize(data, layer_shape)
-    #     return np.array(data)
+    def _data_to_blob(self, layer_shape, data, layout):
+        data_shape = np.shape(data)
+        if len(layer_shape) == 4:
+            if len(data_shape) == 5:
+                data = data[0]
+            if len(data_shape) < 4:
+                if len(np.squeeze(np.zeros(layer_shape))) == len(np.squeeze(np.zeros(data_shape))):
+                    return np.resize(data, layer_shape)
+            return np.transpose(data, layout) if layout is not None else data
+        if len(layer_shape) == 2:
+            if len(data_shape) == 1:
+                return np.transpose([data])
+            if len(data_shape) > 2:
+                if all(dim == 1 for dim in layer_shape) and all(dim == 1 for dim in data_shape):
+                    return np.resize(data, layer_shape)
+                if len(np.squeeze(np.zeros(layer_shape))) == len(np.squeeze(np.zeros(data_shape))):
+                    return np.resize(data, layer_shape)
+        if len(layer_shape) == 3 and len(data_shape) == 4:
+            return np.transpose(data, layout)[0] if layout is not None else data[0]
+        if layout is not None and len(layer_shape) == len(layout):
+            return np.transpose(data, layout)
+        if (
+                len(layer_shape) == 1 and len(data_shape) > 1 and
+                len(np.squeeze(np.zeros(layer_shape))) == len(np.squeeze(np.zeros(data_shape)))
+        ):
+            return np.resize(data, layer_shape)
+        return np.array(data)
 
-    # def fit_to_input(self, data, layer_name, layout, precision, template=None):
-    #     layer_shape = tuple(self._inputs_shapes[layer_name])
-    #     data = self._data_to_blob(layer_shape, data, layout)
-    #     if precision:
-    #         data = data.astype(precision)
+    def fit_to_input(self, data, layer_name, layout, precision, template=None):
+        layer_shape = tuple(self._inputs_shapes[layer_name])
+        data = self._data_to_blob(layer_shape, data, layout)
+        if precision:
+            data = data.astype(precision)
 
-    #     return data.reshape(layer_shape)
+        if data.shape != layer_shape:
+            if self.allow_reshape_input:
+                return data
+
+        return data.reshape(layer_shape)
 
     def predict(self, inputs, metadata=None, **kwargs):
         """
