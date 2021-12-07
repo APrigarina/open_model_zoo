@@ -75,7 +75,10 @@ class OpenCVLauncher(Launcher):
                 optional=True, default='IE',
                 description="Backend name: {}".format(', '.join(OpenCVLauncher.OPENCV_BACKENDS.keys()))),
             'inputs': ListInputsField(optional=False, description="Inputs."),
-            'allow_reshape_input': BoolField(optional=True, default=False, description="Allows reshape input.")
+            'allow_reshape_input': BoolField(optional=True, default=False, description="Allows reshape input."),
+            '_model_type': StringField(
+                choices=['xml', 'blob', 'onnx', 'paddle', 'tf', 'caffe'],
+                description='hint for model type in automatic model search', optional=True)
         })
 
         return parameters
@@ -102,7 +105,10 @@ class OpenCVLauncher(Launcher):
             raise ConfigError('{} is not supported device'.format(selected_device))
 
         if not self._delayed_model_loading:
-            self.model, self.weights = self.automatic_model_search()
+            self.model, self.weights = self.automatic_model_search(self._model_name,
+                self.get_value_from_config('model'), self.get_value_from_config('weights'),
+                self.get_value_from_config('_model_type')
+                )
             self.network = self.create_network(self.model, self.weights)
             self.allow_reshape_input = self.get_value_from_config('allow_reshape_input')
             self._inputs_shapes = self.get_inputs_from_config(self.config)
@@ -197,50 +203,39 @@ class OpenCVLauncher(Launcher):
     def predict_async(self, *args, **kwargs):
         raise ValueError('OpenCV Launcher does not support async mode yet')
 
-    def automatic_model_search(self):
-        def get_xml(model_dir):
-            models_list = list(model_dir.glob('{}.xml'.format(self._model_name)))
-            if not models_list:
-                models_list = list(model_dir.glob('*.xml'))
-            return models_list
-
-        def get_blob(model_dir):
-            blobs_list = list(Path(model_dir).glob('{}.blob'.format(self._model_name)))
-            if not blobs_list:
-                blobs_list = list(Path(model_dir).glob('*.blob'))
-            return blobs_list
-
-        def get_onnx(model_dir):
-            onnx_list = list(Path(model_dir).glob('{}.onnx'.format(self._model_name)))
-            if not onnx_list:
-                onnx_list = list(Path(model_dir).glob('*.onnx'))
-            return onnx_list
-
-        def get_caffe(model_dir):
-            caffe_list = list(Path(model_dir).glob('{}.caffemodel'.format(self._model_name)))
-            if not caffe_list:
-                caffe_list = list(Path(model_dir).glob('*.caffemodel'))
-            return caffe_list
+    def automatic_model_search(self, model_name, model_cfg, weights_cfg, model_type=None):
+        model_type_ext = {
+            'xml': 'xml',
+            'blob': 'blob',
+            'onnx': 'onnx',
+            'paddle': 'pdmodel',
+            'tf': 'pb',
+            'caffe': 'prototxt'
+        }
+        def get_model_by_suffix(model_name, model_dir, suffix):
+            model_list = list(Path(model_dir).glob('{}.{}'.format(model_name, suffix)))
+            if not model_list:
+                model_list = list(Path(model_dir).glob('*.{}'.format(suffix)))
+            if not model_list:
+                model_list = list(Path(model_dir).parent.glob('*.{}'.format(suffix)))
+            return model_list
 
         def get_model():
-            model = Path(self.get_value_from_config('model'))
-            model_is_blob = self.get_value_from_config('_model_is_blob')
+            model = Path(model_cfg)
             if not model.is_dir():
-                accepted_suffixes = ['.blob', '.onnx', '.xml']
-                if model.suffix not in accepted_suffixes:
+                accepted_suffixes = list(model_type_ext.values())
+                if model.suffix[1:] not in accepted_suffixes:
                     raise ConfigError('Models with following suffixes are allowed: {}'.format(accepted_suffixes))
                 print_info('Found model {}'.format(model))
                 return model, model.suffix == '.blob'
-            if model_is_blob:
-                model_list = get_blob(model)
+            model_list = []
+            if model_type is not None:
+                model_list = get_model_by_suffix(model_name, model, model_type_ext[model_type])
             else:
-                model_list = get_xml(model)
-                if not model_list and model_is_blob is None:
-                    model_list = get_blob(model)
-                if not model_list:
-                    model_list = get_onnx(model)
-                if not model_list:
-                    model_list = get_caffe(model)
+                for ext in model_type_ext.values():
+                    model_list = get_model_by_suffix(model_name, model, ext)
+                    if model_list:
+                        break
             if not model_list:
                 raise ConfigError('suitable model is not found')
             if len(model_list) != 1:
@@ -252,18 +247,15 @@ class OpenCVLauncher(Launcher):
         model, is_blob = get_model()
         if is_blob:
             return model, None
-        weights = self.get_value_from_config('weights')
-        if (weights is None or Path(weights).is_dir()) and model.suffix != '.onnx':
+        weights = weights_cfg
+        if (weights is None or Path(weights).is_dir()):
             weights_dir = weights or model.parent
-            weights_list = list(Path(weights_dir).glob('*.bin'))
-            if not weights_list:
-                if model.suffix == '.caffemodel':
-                    weights_list = list(Path(weights_dir).glob('*.prototxt'))
-            if weights_list:
-                weights = weights_list[0]
+            if model.suffix == '.xml':
+                weights = Path(weights_dir) / model.name.replace('xml', 'bin')
+            elif model.suffix == '.prototxt':
+                weights = Path(weights_dir) / model.name.replace('prototxt', 'caffemodel')
         if weights is not None:
-            weights = weights_list[0]
-            accepted_weights_suffixes = ['.bin', '.prototxt']
+            accepted_weights_suffixes = ['.bin', '.caffemodel']
             if weights.suffix not in accepted_weights_suffixes:
                 raise ConfigError('Weights with following suffixes are allowed: {}'.format(accepted_weights_suffixes))
             print_info('Found weights {}'.format(get_path(weights)))
