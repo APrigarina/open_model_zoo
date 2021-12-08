@@ -76,9 +76,6 @@ class OpenCVLauncher(Launcher):
                 description="Backend name: {}".format(', '.join(OpenCVLauncher.OPENCV_BACKENDS.keys()))),
             'inputs': ListInputsField(optional=False, description="Inputs."),
             'allow_reshape_input': BoolField(optional=True, default=False, description="Allows reshape input."),
-            '_model_type': StringField(
-                choices=['xml', 'blob', 'onnx', 'paddle', 'tf', 'caffe'],
-                description='hint for model type in automatic model search', optional=True)
         })
 
         return parameters
