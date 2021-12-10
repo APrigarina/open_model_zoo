@@ -22,26 +22,31 @@ models:
             shape: 1, 256, 256
           - name: user_ab
             type: CONST_INPUT
-            shape: 2, 256, 256
+            value: 0
+            shape: [2, 256, 256]
           - name: user_map
             type: CONST_INPUT
-            shape: 1, 256, 256
+            value: 0
+            shape: [1, 256, 256]
         adapter:
           type: image_processing
           std: 1
           cast_to_uint8: false
       - framework: opencv
         backend: ocv
+        _model_type: onnx
         inputs:
           - name: data_l
             type: INPUT
             shape: 1, 256, 256
           - name: user_ab
             type: CONST_INPUT
-            shape: 2, 256, 256
+            value: 0
+            shape: [2, 256, 256]
           - name: user_map
             type: CONST_INPUT
-            shape: 1, 256, 256
+            value: 0
+            shape: [1, 256, 256]
         adapter:
           type: image_processing
           std: 1

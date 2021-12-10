@@ -51,6 +51,7 @@ models:
           lm_vocabulary_length: 4463723
       - framework: opencv
         backend: ocv
+        _model_type: tf
         inputs:
           - name: input_node
             type: INPUT

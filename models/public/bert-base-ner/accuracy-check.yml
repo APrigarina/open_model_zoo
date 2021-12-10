@@ -27,6 +27,7 @@ models:
         adapter: bert_ner
       - framework: opencv
         backend: ocv
+        _model_type: onnx
         inputs:
           - name: input_ids
             type: INPUT

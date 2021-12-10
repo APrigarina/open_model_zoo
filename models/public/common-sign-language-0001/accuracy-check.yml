@@ -14,16 +14,17 @@ models:
           - name: input
             type: INPUT
             layout: NCDHW
-            shape: 8, 224, 224
+            shape: 3, 8, 224, 224
         adapter: classification
 
       - framework: opencv
         backend: ocv
+        _model_type: onnx
         inputs:
           - name: input
             type: INPUT
             layout: NCDHW
-            shape: 8, 224, 224
+            shape: 3, 8, 224, 224
         adapter: classification
     datasets:
       - name: jester

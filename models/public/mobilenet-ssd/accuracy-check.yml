@@ -33,8 +33,26 @@ models:
             type: INPUT
             shape: 3, 300, 300
         adapter: ssd
+
+    datasets:
+      - name: VOC2007_detection
+        preprocessing:
+          - type: resize
+            size: 300
+        postprocessing:
+          - type: resize_prediction_boxes
+        metrics:
+          - type: map
+            integral: 11point
+            ignore_difficult: true
+            presenter: print_scalar
+            reference: 0.67
+
+  - name: mobilenet-ssd
+    launchers:
       - framework: opencv
         backend: ocv
+        _model_type: caffe
         inputs:
           - name: data
             type: INPUT
@@ -46,6 +64,9 @@ models:
         preprocessing:
           - type: resize
             size: 300
+          - type: normalization
+            mean: 127.5
+            std: 127.5
         postprocessing:
           - type: resize_prediction_boxes
         metrics:

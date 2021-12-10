@@ -11,6 +11,7 @@ models:
         adapter: mono_depth
       - framework: opencv
         backend: ocv
+        _model_type: tf
         inputs:
           - name: Placeholder
             type: INPUT

@@ -18,6 +18,7 @@ models:
 
       - framework: opencv
         backend: ocv
+        _model_type: mxnet
         inputs:
           - name: data_crop
             type: INPUT

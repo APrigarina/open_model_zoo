@@ -39,6 +39,7 @@ evaluations:
 
         - framework: opencv
           backend: ocv
+          _model_type: onnx
           inputs:
             - name: input_seg_map
               type: INPUT
