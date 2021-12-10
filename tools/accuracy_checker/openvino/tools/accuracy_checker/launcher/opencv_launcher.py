@@ -250,7 +250,9 @@ class OpenCVLauncher(Launcher):
             if model.suffix == '.xml':
                 weights = Path(weights_dir) / model.name.replace('xml', 'bin')
             elif model.suffix == '.prototxt':
-                weights = Path(weights_dir) / model.name.replace('prototxt', 'caffemodel')
+                weights_list = list(Path(weights_dir).glob('*.{}'.format('caffemodel')))
+                if weights_list:
+                    weights = weights_list[0]
         if weights is not None:
             accepted_weights_suffixes = ['.bin', '.caffemodel']
             if weights.suffix not in accepted_weights_suffixes:
