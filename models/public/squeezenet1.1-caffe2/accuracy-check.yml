@@ -35,8 +35,30 @@ models:
             type: INPUT
             shape: 3, 227, 227
         adapter: classification
+
+    datasets:
+      - name: imagenet_1000_classes
+        preprocessing:
+          - type: resize
+            size: 256
+            aspect_ratio_scale: greater
+          - type: crop
+            size: 227
+        metrics:
+          - name: accuracy@top1
+            type: accuracy
+            top_k: 1
+            reference: 0.56502
+          - name: accuracy@top5
+            type: accuracy
+            top_k: 5
+            reference: 0.79576
+
+  - name: squeezenet1.1-caffe2
+    launchers:
       - framework: opencv
         backend: ocv
+        _model_type: onnx
         inputs:
           - name: data
             type: INPUT
@@ -48,9 +70,10 @@ models:
         preprocessing:
           - type: resize
             size: 256
-            aspect_ratio_scale: greater
           - type: crop
             size: 227
+          - type: normalization
+            mean: 103.96,116.78,123.68
         metrics:
           - name: accuracy@top1
             type: accuracy

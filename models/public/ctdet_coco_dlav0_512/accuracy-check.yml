@@ -21,6 +21,7 @@ models:
 
       - framework: opencv
         backend: ocv
+        _model_type: onnx
         inputs:
           - name: input.1
             type: INPUT

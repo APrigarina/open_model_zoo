@@ -17,6 +17,7 @@ models:
           cast_to_uint8: false
       - framework: opencv
         backend: ocv
+        _model_type: onnx
         inputs:
           - name: data_l
             type: INPUT

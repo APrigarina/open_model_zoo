@@ -17,6 +17,7 @@ models:
 
       - framework: opencv
         backend: ocv
+        _model_type: tf
         inputs:
           - name: image_tensor
             type: INPUT

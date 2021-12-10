@@ -37,6 +37,7 @@ models:
         adapter: classification
       - framework: opencv
         backend: ocv
+        _model_type: caffe
         inputs:
           - name: data
             type: INPUT

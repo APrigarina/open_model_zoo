@@ -72,8 +72,42 @@ models:
           coords: 4
           classes: 80
           cells: 19
+
+    datasets:
+      - name: ms_coco_detection_80_class_without_background
+
+        preprocessing:
+          - type: resize
+            size: 608
+
+        postprocessing:
+          - type: resize_prediction_boxes
+          - type: filter
+            apply_to: prediction
+            min_confidence: 0.001
+            remove_filtered: true
+          - type: nms
+            overlap: 0.5
+          - type: clip_boxes
+            apply_to: prediction
+
+        metrics:
+          - type: map
+            integral: 11point
+            ignore_difficult: true
+            presenter: print_scalar
+            reference: 0.5315
+          - type: coco_precision
+            max_detections: 100
+            threshold: 0.5
+            reference: 0.565
+
+  - name: yolo-v2-tf
+
+    launchers:
       - framework: opencv
         backend: ocv
+        _model_type: tf
         inputs:
           - name: image_input
             type: INPUT
@@ -87,11 +121,13 @@ models:
           classes: 80
           cells: 19
 
-
     datasets:
       - name: ms_coco_detection_80_class_without_background
 
         preprocessing:
+          - type: bgr_to_rgb
+          - type: normalization
+            std: 255.0
           - type: resize
             size: 608
 

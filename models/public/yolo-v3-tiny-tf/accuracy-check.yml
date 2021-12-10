@@ -87,8 +87,40 @@ models:
           outputs:
             - conv2d_9/Conv2D/YoloRegion
             - conv2d_12/Conv2D/YoloRegion
+
+    datasets:
+      - name: ms_coco_detection_80_class_without_background
+        preprocessing:
+          - type: resize
+            size: 416
+
+        postprocessing:
+          - type: resize_prediction_boxes
+          - type: filter
+            apply_to: prediction
+            min_confidence: 0.001
+            remove_filtered: true
+          - type: nms
+            overlap: 0.5
+          - type: clip_boxes
+            apply_to: prediction
+        metrics:
+          - type: map
+            integral: 11point
+            ignore_difficult: true
+            presenter: print_scalar
+            reference: 0.359
+          - type: coco_precision
+            max_detections: 100
+            threshold: 0.5
+            reference: 0.397
+
+  - name: yolo-v3-tiny-tf
+
+    launchers:
       - framework: opencv
         backend: ocv
+        _model_type: tf
         inputs:
           - name: image_input
             type: INPUT
@@ -107,7 +139,11 @@ models:
 
     datasets:
       - name: ms_coco_detection_80_class_without_background
+
         preprocessing:
+          - type: bgr_to_rgb
+          - type: normalization
+            std: 255.0
           - type: resize
             size: 416
 
@@ -121,6 +157,7 @@ models:
             overlap: 0.5
           - type: clip_boxes
             apply_to: prediction
+
         metrics:
           - type: map
             integral: 11point
