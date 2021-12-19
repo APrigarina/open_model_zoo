@@ -214,7 +214,7 @@ class OpenCVLauncher(Launcher):
             if not model_list:
                 model_list = list(Path(model_dir).glob('*.{}'.format(suffix)))
             if not model_list:
-                model_list = list(Path(model_dir).parent.glob('*.{}'.format(suffix)))
+                model_list = list(Path(model_dir).parent.rglob('*.{}'.format(suffix)))
             return model_list
 
         def get_model():
