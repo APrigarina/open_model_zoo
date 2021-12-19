@@ -727,6 +727,7 @@ class DLSDKLauncher(Launcher):
             self._do_reshape = not self.is_dynamic
             return data, template
         data_shape = np.shape(data)
+        print("data_shape", data_shape, "layer_shape", layer_shape)
         if data_shape != layer_shape:
             if self.allow_reshape_input:
                 self._do_reshape = True

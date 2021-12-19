@@ -62,6 +62,7 @@ def build_stages(models_info, preprocessors_config, launcher, model_args, delaye
             raise ConfigError('{} stage does not support {} framework'.format(stage_name, stage_framework))
         stage_preprocess = models_info[stage_name].get('preprocessing', [])
         model_specific_preprocessor = PreprocessingExecutor(stage_preprocess)
+        print("stage", stage)
         stages[stage_name] = stage(
             models_info[stage_name], model_specific_preprocessor, common_preprocessor, launcher, delayed_model_loading
         )

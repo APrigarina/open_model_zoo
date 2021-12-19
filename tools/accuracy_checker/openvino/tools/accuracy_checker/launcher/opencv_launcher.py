@@ -28,7 +28,6 @@ from ..utils import get_or_parse_value, get_path
 DEVICE_REGEX = r'(?P<device>cpu$|gpu|gpu_fp16)?'
 BACKEND_REGEX = r'(?P<backend>ocv|ie)?'
 
-
 class OpenCVLauncherConfigValidator(LauncherConfigValidator):
     def validate(self, entry, field_uri=None, fetch_only=False):
         self.fields['inputs'].optional = self.delayed_model_loading
@@ -111,6 +110,9 @@ class OpenCVLauncher(Launcher):
             self._inputs_shapes = self.get_inputs_from_config(self.config)
             self.network.setInputsNames(list(self._inputs_shapes.keys()))
             self.output_names = self.network.getUnconnectedOutLayersNames()
+        self._lstm_inputs = None
+        if '_list_lstm_inputs' in self.config:
+            self._configure_lstm_inputs()
 
     @classmethod
     def validate_config(cls, config, delayed_model_loading=False, fetch_only=False, uri_prefix=''):
@@ -135,11 +137,32 @@ class OpenCVLauncher(Launcher):
     def output_blob(self):
         return next(iter(self.output_names))
 
-    def _data_to_blob(self, layer_shape, data, layout):
+    def _configure_lstm_inputs(self):
+        lstm_mapping = {}
+        config_inputs = self.config.get('inputs', [])
+        for input_config in config_inputs:
+            if input_config['type'] == 'LSTM_INPUT':
+                lstm_mapping[input_config['name']] = input_config['value']
+        self._lstm_inputs = lstm_mapping
+
+    def _fill_lstm_inputs(self, infer_outputs=None):
+        feed_dict = {}
+        for lstm_var, output_layer in self._lstm_inputs.items():
+            layer_shape = self._inputs_shapes[lstm_var]
+            input_data = infer_outputs[output_layer].reshape(layer_shape) if infer_outputs else np.zeros(
+                layer_shape
+            )
+            feed_dict[lstm_var] = input_data
+        return feed_dict
+
+    def _data_to_blob(self, layer_shape, data, layout):  # pylint:disable=R0911,R0912
         data_shape = np.shape(data)
         if len(layer_shape) == 4:
             if len(data_shape) == 5:
                 data = data[0]
+            if len(data_shape) == 3:
+                data = np.expand_dims(data, -1)
+            data_shape = np.shape(data)
             if len(data_shape) < 4:
                 if len(np.squeeze(np.zeros(layer_shape))) == len(np.squeeze(np.zeros(data_shape))):
                     return np.resize(data, layer_shape)
@@ -154,6 +177,11 @@ class OpenCVLauncher(Launcher):
                     return np.resize(data, layer_shape)
         if len(layer_shape) == 3 and len(data_shape) == 4:
             return np.transpose(data, layout)[0] if layout is not None else data[0]
+        if len(layer_shape) == 1:
+            return np.resize(data, layer_shape)
+        if (len(data_shape) == 3) and (len(layer_shape) == 2) and (data_shape[0] == 1) and (
+                data_shape[1] == 1) and self.allow_reshape_input:
+            return data[0]
         if layout is not None and len(layer_shape) == len(layout):
             return np.transpose(data, layout)
         if (
@@ -184,9 +212,16 @@ class OpenCVLauncher(Launcher):
             raw data from network.
         """
         results = []
+        if self._lstm_inputs:
+            lstm_inputs_feed = self._fill_lstm_inputs()
+            for blob_name in self._lstm_inputs:
+                input = lstm_inputs_feed[blob_name].astype(np.float32)
+                self.network.setInput(input, blob_name)
+
         for input_blobs in inputs:
-            for blob_name in self._inputs_shapes:
-                self.network.setInput(input_blobs[blob_name].astype(np.float32), blob_name)
+            for blob_name in input_blobs.keys():
+                input = input_blobs[blob_name].astype(np.float32)
+                self.network.setInput(input, blob_name)
             list_prediction = self.network.forward(self.output_names)
             dict_result = dict(zip(self.output_names, list_prediction))
             results.append(dict_result)
