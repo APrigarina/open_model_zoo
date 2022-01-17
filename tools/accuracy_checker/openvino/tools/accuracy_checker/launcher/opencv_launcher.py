@@ -147,9 +147,9 @@ class OpenCVLauncher(Launcher):
 
     def _fill_lstm_inputs(self, infer_outputs=None):
         feed_dict = {}
-        for lstm_var, output_layer in self._lstm_inputs.items():
+        for i, lstm_var in enumerate(self._lstm_inputs.keys()):
             layer_shape = self._inputs_shapes[lstm_var]
-            input_data = infer_outputs[output_layer].reshape(layer_shape) if infer_outputs else np.zeros(
+            input_data = infer_outputs[i].reshape(layer_shape) if infer_outputs else np.zeros(
                 layer_shape
             )
             feed_dict[lstm_var] = input_data
@@ -203,6 +203,25 @@ class OpenCVLauncher(Launcher):
 
         return data.reshape(layer_shape)
 
+    def predict_sequential(self, inputs, metadata=None, **kwargs):
+        lstm_inputs_feed = self._fill_lstm_inputs()
+        results = []
+        for input_blobs in inputs:
+            input_blobs.update(lstm_inputs_feed)
+            for blob_name in input_blobs.keys():
+                input = input_blobs[blob_name].astype(np.float32)
+                self.network.setInput(input, blob_name)
+            list_prediction = self.network.forward(self.output_names)
+            lstm_inputs_feed = self._fill_lstm_inputs(list_prediction)
+            dict_result = dict(zip(self.output_names, list_prediction))
+            results.append(dict_result)
+
+        if metadata is not None:
+            for meta_ in metadata:
+                meta_['input_shape'] = self.inputs_info_for_meta()
+
+        return results
+
     def predict(self, inputs, metadata=None, **kwargs):
         """
         Args:
@@ -213,10 +232,7 @@ class OpenCVLauncher(Launcher):
         """
         results = []
         if self._lstm_inputs:
-            lstm_inputs_feed = self._fill_lstm_inputs()
-            for blob_name in self._lstm_inputs:
-                input = lstm_inputs_feed[blob_name].astype(np.float32)
-                self.network.setInput(input, blob_name)
+            return self.predict_sequential(inputs, metadata)
 
         for input_blobs in inputs:
             for blob_name in input_blobs.keys():
