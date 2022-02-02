@@ -338,4 +338,5 @@ class OpenCVLauncher(Launcher):
         """
         Releases launcher.
         """
-        del self.network
+        if 'network' in self.__dict__:
+            del self.network
