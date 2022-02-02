@@ -197,11 +197,7 @@ class OpenCVLauncher(Launcher):
         if precision:
             data = data.astype(precision)
 
-        if data.shape != layer_shape:
-            if self.allow_reshape_input:
-                return data
-
-        return data.reshape(layer_shape)
+        return data
 
     def predict_sequential(self, inputs, metadata=None, **kwargs):
         lstm_inputs_feed = self._fill_lstm_inputs()
@@ -334,4 +330,5 @@ class OpenCVLauncher(Launcher):
         """
         Releases launcher.
         """
-        del self.network
+        if 'network' in self.__dict__:
+            del self.network
