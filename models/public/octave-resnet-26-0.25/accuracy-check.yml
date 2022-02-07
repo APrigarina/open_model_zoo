@@ -53,13 +53,6 @@ models:
             type: INPUT
             shape: 3, 224, 224
         adapter: classification
-      - framework: opencv
-        backend: ocv
-        inputs:
-          - name: data
-            type: INPUT
-            shape: 3, 224, 224
-        adapter: classification
 
     datasets:
       - name: imagenet_1000_classes

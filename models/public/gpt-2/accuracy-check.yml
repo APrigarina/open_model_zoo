@@ -38,6 +38,8 @@ models:
         inputs:
           - name: input
             type: INPUT
+            value: input_ids
+            precision: I32
             shape: 1, 1024
         adapter:
           type: common_language_modeling
@@ -57,10 +59,13 @@ models:
   - name: gpt-2
     launchers:
       - framework: opencv
+        backend: ocv
         _model_type: onnx
         inputs:
           - name: input
             type: INPUT
+            value: input_ids
+            precision: I32
             shape: 1, 1024
         adapter:
           type: common_language_modeling

@@ -128,14 +128,17 @@ models:
         adapter:
           type: yolo_v3
           anchors: tiny_yolo_v3
-          num: 3
+          num: 6
           coords: 4
           classes: 80
           threshold: 0.001
           anchor_masks: [[3, 4, 5], [1, 2, 3]]
+          raw_output: true
+          output_format: HWB
+          cells: [13, 26]
           outputs:
-            - conv2d_9/Conv2D/YoloRegion
-            - conv2d_12/Conv2D/YoloRegion
+            - conv2d_9/BiasAdd
+            - conv2d_12/BiasAdd
 
     datasets:
       - name: ms_coco_detection_80_class_without_background

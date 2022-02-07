@@ -14,6 +14,7 @@ models:
           type: brain_tumor_segmentation
       - framework: opencv
         backend: ocv
+        _model_type: onnx
         inputs:
           - name: '0'
             type: INPUT

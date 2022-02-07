@@ -8,6 +8,28 @@ models:
           reverse_channels: True
         allow_reshape_input: True
 
+      - framework: opencv
+        inputs:
+          - name: image_lq
+            type: INPUT
+            shape: 3, 512, 512
+        adapter:
+          type: image_processing
+          reverse_channels: True
+        allow_reshape_input: True
+
+      - framework: opencv
+        backend: ocv
+        _model_type: onnx
+        inputs:
+          - name: image_lq
+            type: INPUT
+            shape: 3, 512, 512
+        adapter:
+          type: image_processing
+          reverse_channels: True
+        allow_reshape_input: True
+
     datasets:
       - name: LIVE_1
         preprocessing:

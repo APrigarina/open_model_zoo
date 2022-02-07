@@ -26,8 +26,21 @@ models:
             type: INPUT
             shape: 3, 32, 32
         adapter: classification
+
+    datasets:
+      - name: mrlEyes_2018_01
+        preprocessing:
+          - type: resize
+            size: 32
+        metrics:
+          - type: accuracy
+            reference: 0.9584
+
+  - name: open-closed-eye-0001
+    launchers:
       - framework: opencv
         backend: ocv
+        _model_type: onnx
         inputs:
           - name: input.1
             type: INPUT
@@ -38,6 +51,9 @@ models:
         preprocessing:
           - type: resize
             size: 32
+          - type: normalization
+            mean: 127.0, 127.0, 127.0
+            std: 255.0, 255.0, 255.0
         metrics:
           - type: accuracy
             reference: 0.9584

@@ -44,10 +44,12 @@ models:
         inputs:
           - name: Placeholder
             type: INPUT
-            shape: 1, 512, 680, 3
+            value: .*image
+            shape: 3, 512, 680
           - name: Placeholder_1
             type: INPUT
-            shape: 1, 512, 680, 1
+            value: .*mask
+            shape: 1, 512, 680
         adapter: inpainting
 
     datasets:
@@ -75,10 +77,12 @@ models:
         inputs:
           - name: Placeholder
             type: INPUT
-            shape: 1, 512, 680, 3
+            value: .*image
+            shape: 512, 680, 3
           - name: Placeholder_1
             type: INPUT
-            shape: 1, 512, 680, 1
+            value: .*mask
+            shape: 512, 680, 1
         adapter: inpainting
 
     datasets:

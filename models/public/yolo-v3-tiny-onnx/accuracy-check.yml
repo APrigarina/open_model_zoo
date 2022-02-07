@@ -47,6 +47,20 @@ models:
         inputs:
           - name: image_shape
             type: ORIG_IMAGE_INFO
+
+      - framework: opencv
+        adapter:
+          type: yolo_v3_onnx
+          boxes_out: yolonms_layer_1
+          scores_out: yolonms_layer_1:1
+          indices_out: yolonms_layer_1:2
+        inputs:
+          - name: image_shape
+            type: ORIG_IMAGE_INFO
+            shape: 2
+          - name: input_1
+            type: INPUT
+            shape: 3, 416, 416
     datasets:
       - name: ms_coco_detection_80_class_without_background
         reader: pillow_imread
@@ -60,6 +74,48 @@ models:
           - type: padding
             pad_value: 128, 128, 128
             size: 416
+        metrics:
+          - type: map
+            integral: 11point
+            ignore_difficult: true
+            presenter: print_scalar
+            reference: 0.1707
+          - type: coco_precision
+            max_detections: 100
+            threshold: 0.5
+            reference: 0.1364
+
+  - name: yolo-v3-tiny-onnx
+    launchers:
+      - framework: opencv
+        backend: ocv
+        _model_type: onnx
+        adapter:
+          type: yolo_v3_onnx
+          boxes_out: yolonms_layer_1
+          scores_out: yolonms_layer_1:1
+          indices_out: yolonms_layer_1:2
+        inputs:
+          - name: image_shape
+            type: ORIG_IMAGE_INFO
+            shape: 2
+          - name: input_1
+            type: INPUT
+            shape: 3, 416, 416
+    datasets:
+      - name: ms_coco_detection_80_class_without_background
+        reader: pillow_imread
+        preprocessing:
+          - type: resize
+            size: 416
+            interpolation: BICUBIC
+            use_pillow: True
+            aspect_ratio_scale: fit_to_window
+          - type: padding
+            pad_value: 128, 128, 128
+            size: 416
+          - type: normalization
+            std: 255
         metrics:
           - type: map
             integral: 11point

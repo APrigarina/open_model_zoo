@@ -135,10 +135,11 @@ models:
           coords: 4
           classes: 80
           anchor_masks: [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
+          raw_output: true
           outputs:
-            - conv2d_58/Conv2D/YoloRegion
-            - conv2d_66/Conv2D/YoloRegion
-            - conv2d_74/Conv2D/YoloRegion
+            - conv2d_58/BiasAdd
+            - conv2d_66/BiasAdd
+            - conv2d_74/BiasAdd
 
     datasets:
       - name: ms_coco_detection_80_class_without_background

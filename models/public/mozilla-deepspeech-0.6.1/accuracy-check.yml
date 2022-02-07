@@ -28,6 +28,7 @@ models:
         inputs:
           - name: input_node
             type: INPUT
+            layout: NHWC
             shape: 16, 19, 26
           - name: previous_state_h
             type: LSTM_INPUT
@@ -55,6 +56,7 @@ models:
         inputs:
           - name: input_node
             type: INPUT
+            layout: NHWC
             shape: 16, 19, 26
           - name: previous_state_h
             type: LSTM_INPUT
