@@ -44,38 +44,8 @@ models:
             type: INPUT
             shape: 3, 256, 256
         adapter: classification
-
-    datasets:
-      - name: imagenet_1000_classes
-        reader: pillow_imread
-
-        preprocessing:
-          - type: resize
-            size: 284
-            aspect_ratio_scale: greater
-            use_pillow: true
-            interpolation: BICUBIC
-          - type: crop
-            size: 256
-            use_pillow: true
-          - type: rgb_to_bgr
-
-        metrics:
-          - name: accuracy@top1
-            type: accuracy
-            top_k: 1
-            reference: 0.8334
-          - name: accuracy@top5
-            type: accuracy
-            top_k: 5
-            reference: 0.9656
-
-  - name: nfnet-f0
-
-    launchers:
       - framework: opencv
         backend: ocv
-        _model_type: onnx
         inputs:
           - name: image
             type: INPUT
@@ -95,9 +65,7 @@ models:
           - type: crop
             size: 256
             use_pillow: true
-          - type: normalization
-            std: [58.395, 57.12, 57.375]
-            mean: [123.675, 116.28, 103.53]
+          - type: rgb_to_bgr
 
         metrics:
           - name: accuracy@top1

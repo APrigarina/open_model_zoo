@@ -20,7 +20,7 @@ models:
             shape: 1, 1, 16000
         adapter: classification
     datasets:
-      - name: des-53
+      - name: sound_classification
 
         preprocessing:
           - type: clip_audio

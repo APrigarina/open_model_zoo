@@ -25,7 +25,6 @@ models:
 
       - framework: opencv
         backend: ocv
-        _model_net: onnx
         inputs:
           - name: audio_signal
             type: INPUT

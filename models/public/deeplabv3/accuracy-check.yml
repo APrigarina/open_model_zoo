@@ -13,7 +13,6 @@ models:
 
       - framework: opencv
         backend: ocv
-        _model_type: tf
         inputs:
           - name: mul_1/placeholder_port_1
             type: INPUT

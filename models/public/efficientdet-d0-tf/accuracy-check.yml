@@ -11,7 +11,6 @@ models:
         adapter: ssd
       - framework: opencv
         backend: ocv
-        _model_type: tf
         inputs:
           - name: image_arrays
             type: INPUT

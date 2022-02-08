@@ -14,21 +14,7 @@ models:
         inputs:
           - name: image
             type: INPUT
-            shape: 3, 512, 512
-        allow_reshape_input: true
-        adapter:
-          type: human_pose_estimation_hrnet
-          embeddings_out: embeddings
-          heatmaps_out: heatmaps
-          nms_heatmaps_out: heatmaps
-
-      - framework: opencv
-        backend: ocv
-        _model_type: onnx
-        inputs:
-          - name: image
-            type: INPUT
-            shape: 3, 512, 512
+            shape: 1, 3, 512, 512
         allow_reshape_input: true
         adapter:
           type: human_pose_estimation_hrnet

@@ -13,7 +13,6 @@ models:
 
       - framework: opencv
         backend: ocv
-        _model_type: tf
         inputs:
           - name: input
             type: INPUT

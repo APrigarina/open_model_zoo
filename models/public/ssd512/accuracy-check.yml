@@ -33,26 +33,8 @@ models:
             type: INPUT
             shape: 3, 512, 512
         adapter: ssd
-
-    datasets:
-      - name: VOC2007_detection
-        preprocessing:
-          - type: resize
-            size: 512
-        postprocessing:
-          - type: resize_prediction_boxes
-        metrics:
-          - type: map
-            integral: 11point
-            ignore_difficult: true
-            presenter: print_scalar
-            reference: 0.9107
-
-  - name: ssd512
-    launchers:
       - framework: opencv
         backend: ocv
-        _model_type: caffe
         inputs:
           - name: data
             type: INPUT
@@ -64,8 +46,6 @@ models:
         preprocessing:
           - type: resize
             size: 512
-          - type: normalization
-            mean: 104, 117, 123
         postprocessing:
           - type: resize_prediction_boxes
         metrics:

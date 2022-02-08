@@ -19,7 +19,6 @@ models:
           landmarks_output: face_rpn_landmark_pred
       - framework: opencv
         backend: ocv
-        _model_type: onnx
         inputs:
           - name: data
             type: INPUT

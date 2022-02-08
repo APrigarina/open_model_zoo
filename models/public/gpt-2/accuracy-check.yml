@@ -53,26 +53,3 @@ models:
           - type: perplexity
             name: Perplexity
             reference: 0.29
-
-  - name: gpt-2
-    launchers:
-      - framework: opencv
-        _model_type: onnx
-        inputs:
-          - name: input
-            type: INPUT
-            shape: 1, 1024
-        adapter:
-          type: common_language_modeling
-          logits_output: output
-
-    datasets:
-      - name: WikiText_2_raw_gpt2
-        reader:
-          type: annotation_features_extractor
-          features:
-            - input_ids
-        metrics:
-          - type: perplexity
-            name: Perplexity
-            reference: 0.29

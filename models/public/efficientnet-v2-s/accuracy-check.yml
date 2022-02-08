@@ -46,40 +46,8 @@ models:
             type: INPUT
             shape: 3, 456, 456
         adapter: classification
-
-    datasets:
-      - name: imagenet_1000_classes
-        reader: pillow_imread
-
-        preprocessing:
-          - type: rgb_to_bgr
-
-          - type: resize
-            size: 488
-            aspect_ratio_scale: greater
-            use_pillow: true
-            interpolation: BICUBIC
-            # Crop ration 0.934
-          - type: crop
-            use_pillow: true
-            size: 456
-
-        metrics:
-          - name: accuracy@top1
-            type: accuracy
-            top_k: 1
-            reference: 0.8369
-          - name: accuracy@top5
-            type: accuracy
-            top_k: 5
-            reference: 0.9671
-
-  - name: efficientnet-b5-pytorch
-
-    launchers:
       - framework: opencv
         backend: ocv
-        _model_type: onnx
         inputs:
           - name: data
             type: INPUT
@@ -91,6 +59,8 @@ models:
         reader: pillow_imread
 
         preprocessing:
+          - type: rgb_to_bgr
+
           - type: resize
             size: 384
             aspect_ratio_scale: greater
@@ -100,10 +70,6 @@ models:
           - type: crop
             use_pillow: True
             size: 384
-
-          - type: normalization
-            mean: (123.675,116.28,103.53)
-            std: (58.395,57.12,57.375)
 
         metrics:
           - name: accuracy@top1

@@ -23,7 +23,6 @@ models:
 
       - framework: opencv
         backend: ocv
-        _model_type: onnx
         inputs:
           - name: 'data'
             type: INPUT

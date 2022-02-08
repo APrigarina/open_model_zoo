@@ -35,29 +35,8 @@ models:
             type: INPUT
             shape: 3, 224, 224
         adapter: classification
-
-    datasets:
-      - name: imagenet_1000_classes
-        preprocessing:
-          - type: resize
-            size: 256
-          - type: crop
-            size: 224
-        metrics:
-          - name: accuracy@top1
-            type: accuracy
-            top_k: 1
-            reference: 0.68928
-          - name: accuracy@top5
-            type: accuracy
-            top_k: 5
-            reference: 0.89144
-
-  - name: googlenet-v1
-    launchers:
       - framework: opencv
         backend: ocv
-        _model_type: caffe
         inputs:
           - name: data
             type: INPUT
@@ -71,8 +50,6 @@ models:
             size: 256
           - type: crop
             size: 224
-          - type: normalization
-            mean: 104, 117, 123
         metrics:
           - name: accuracy@top1
             type: accuracy

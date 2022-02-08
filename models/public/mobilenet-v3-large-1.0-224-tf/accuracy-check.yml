@@ -34,29 +34,8 @@ models:
             type: INPUT
             shape: 3, 224, 224
         adapter: classification
-
-    datasets:
-      - name: imagenet_1000_classes
-        preprocessing:
-          - type: resize
-            size: 256
-          - type: crop
-            size: 224
-        metrics:
-          - name: accuracy@top1
-            type: accuracy
-            top_k: 1
-            reference: 0.753
-          - name: accuracy@top5
-            type: accuracy
-            top_k: 5
-            reference: 0.9262
-
-  - name: mobilenet-v3-large-1.0-224-tf
-    launchers:
       - framework: opencv
         backend: ocv
-        _model_type: tf
         inputs:
           - name: input_1
             type: INPUT
@@ -66,7 +45,6 @@ models:
     datasets:
       - name: imagenet_1000_classes
         preprocessing:
-          - type: bgr_to_rgb
           - type: resize
             size: 256
           - type: crop
