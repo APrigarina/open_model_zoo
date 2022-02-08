@@ -6,17 +6,9 @@ models:
 
       - framework: opencv
         inputs:
-          - name: mul_1/placeholder_port_1
+          - name: 1:mul_1
             type: INPUT
-            shape: 3, 513, 513
-        adapter: segmentation
-
-      - framework: opencv
-        backend: ocv
-        inputs:
-          - name: mul_1/placeholder_port_1
-            type: INPUT
-            shape: 3, 513, 513
+            shape: 1, 513, 513, 3
         adapter: segmentation
     datasets:
       - name: VOC2012_Segmentation

@@ -63,7 +63,7 @@ models:
         inputs:
           - name: image_input
             type: INPUT
-            shape: 3, 608, 608
+            shape: 1, 608, 608, 3
         adapter:
           type: yolo_v2
           anchors: 0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282,
@@ -72,21 +72,6 @@ models:
           coords: 4
           classes: 80
           cells: 19
-      - framework: opencv
-        backend: ocv
-        inputs:
-          - name: image_input
-            type: INPUT
-            shape: 3, 608, 608
-        adapter:
-          type: yolo_v2
-          anchors: 0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282,
-            3.52778, 9.77052, 9.16828
-          num: 5
-          coords: 4
-          classes: 80
-          cells: 19
-
 
     datasets:
       - name: ms_coco_detection_80_class_without_background

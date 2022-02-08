@@ -17,26 +17,13 @@ models:
         inputs:
           - name: input_ids
             type: INPUT
-            shape: 128
+            shape: 1, 128
           - name: attention_mask
             type: INPUT
-            shape: 128
+            shape: 1, 128
           - name: token_type_ids
             type: INPUT
-            shape: 128
-        adapter: bert_ner
-      - framework: opencv
-        backend: ocv
-        inputs:
-          - name: input_ids
-            type: INPUT
-            shape: 128
-          - name: attention_mask
-            type: INPUT
-            shape: 128
-          - name: token_type_ids
-            type: INPUT
-            shape: 128
+            shape: 1, 128
         adapter: bert_ner
     datasets:
       - name: CONLL2003_bert_cased

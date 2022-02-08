@@ -7,14 +7,7 @@ models:
         inputs:
           - name: Placeholder
             type: INPUT
-            shape: 3, 228, 304
-        adapter: mono_depth
-      - framework: opencv
-        backend: ocv
-        inputs:
-          - name: Placeholder
-            type: INPUT
-            shape: 3, 228, 304
+            shape: 1, 228, 304, 3
         adapter: mono_depth
     datasets:
       - name: NYU_Depth_V2

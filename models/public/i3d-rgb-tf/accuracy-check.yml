@@ -8,23 +8,6 @@ models:
             type: INPUT
             layout: NCDHW
 
-      - framework: opencv
-        inputs:
-         - name: Placeholder
-           type: INPUT
-           layout: NCDHW
-           shape: 3, 79, 224, 224
-        adapter: classification
-
-      - framework: opencv
-        backend: ocv
-        inputs:
-          - name: Placeholder
-            type: INPUT
-            layout: NCDHW
-            shape: 3, 79, 224, 224
-        adapter: classification
-
     datasets:
       - name: kinetics-400-frames-79-400
         data_source: kinetics/frames_val

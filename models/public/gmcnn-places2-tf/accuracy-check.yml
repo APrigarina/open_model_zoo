@@ -49,16 +49,6 @@ models:
             type: INPUT
             shape: 1, 512, 680, 1
         adapter: inpainting
-      - framework: opencv
-        backend: ocv
-        inputs:
-          - name: Placeholder
-            type: INPUT
-            shape: 1, 512, 680, 3
-          - name: Placeholder_1
-            type: INPUT
-            shape: 1, 512, 680, 1
-        adapter: inpainting
 
     datasets:
       - name: inpainting_rect_masks

@@ -9,15 +9,7 @@ models:
         inputs:
           - name: input
             type: INPUT
-            shape: 3, 24, 94
-        adapter: lpr
-
-      - framework: opencv
-        backend: ocv
-        inputs:
-          - name: input
-            type: INPUT
-            shape: 3, 24, 94
+            shape: 1, 24, 94, 3
         adapter: lpr
     datasets:
       - name: synthetic_chinese_license_plates

@@ -45,16 +45,7 @@ models:
         inputs:
           - name: blur_image
             type: INPUT
-            shape: 3, 736, 1312
-        adapter:
-          type: image_processing
-          reverse_channels: true
-      - framework: opencv
-        backend: ocv
-        inputs:
-          - name: blur_image
-            type: INPUT
-            shape: 3, 736, 1312
+            shape: 1, 3, 736, 1312
         adapter:
           type: image_processing
           reverse_channels: true

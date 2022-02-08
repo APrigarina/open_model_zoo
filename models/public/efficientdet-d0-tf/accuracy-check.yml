@@ -7,14 +7,7 @@ models:
         inputs:
           - name: image_arrays
             type: INPUT
-            shape: 3, 512, 512
-        adapter: ssd
-      - framework: opencv
-        backend: ocv
-        inputs:
-          - name: image_arrays
-            type: INPUT
-            shape: 3, 512, 512
+            shape: 1, 512, 512, 3
         adapter: ssd
     datasets:
       - name: ms_coco_detection_90_class_without_background

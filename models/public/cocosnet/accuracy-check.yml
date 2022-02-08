@@ -26,32 +26,13 @@ evaluations:
           inputs:
             - name: input_seg_map
               type: INPUT
-              value: (.*)ADE(.*)val(.*).png
-              shape: 151, 256, 256
+              shape: 1, 151, 256, 256
             - name: ref_image
               type: INPUT
-              value: (.*)train(.*).jpg
-              shape: 3, 256, 256
+              shape: 1, 3, 256, 256
             - name: ref_seg_map
               type: INPUT
-              value: (.*)ADE(.*)train(.*).png
-              shape: 151, 256, 256
-
-        - framework: opencv
-          backend: ocv
-          inputs:
-            - name: input_seg_map
-              type: INPUT
-              value: (.*)ADE(.*)val(.*).png
-              shape: 151, 256, 256
-            - name: ref_image
-              type: INPUT
-              value: (.*)train(.*).jpg
-              shape: 3, 256, 256
-            - name: ref_seg_map
-              type: INPUT
-              value: (.*)ADE(.*)train(.*).png
-              shape: 151, 256, 256
+              shape: 1, 151, 256, 256
       datasets:
         - name: cocosnet_image_translation
 
