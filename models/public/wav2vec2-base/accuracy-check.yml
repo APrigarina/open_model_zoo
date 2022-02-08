@@ -5,21 +5,14 @@ models:
         allow_reshape_input: true
         adapter:
           type: wav2vec
-          alphabet: [<pad>, <s>, </s>, <unk>, '|', E, T, A, O, N, I, H, S, R, D, L,
-            U, M, W, C, F, G, Y, P, B, V, K, "'", X, J, Q, Z]
-      - framework: opencv
-        inputs:
-          - name: inputs
-            type: INPUT
-            shape: 1, 30480
-        adapter: classification
+          alphabet: ['<pad>', '<s>', '</s>', '<unk>', '|', "E", "T", "A", "O", "N", "I", "H", "S", "R", "D", "L", "U", "M", "W", "C", "F", "G", "Y", "P", "B", "V", "K", "'", "X", "J", "Q", "Z"]
 
     datasets:
       - name: librispeech-test-clean
         reader:
           type: wav_reader
-          mono: true
-          to_float: true
+          mono: True
+          to_float: True
           float_dtype: float64
         preprocessing:
           - type: audio_normalization

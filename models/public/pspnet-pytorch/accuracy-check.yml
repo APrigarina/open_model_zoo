@@ -3,12 +3,6 @@ models:
     launchers:
       - framework: dlsdk
         adapter: segmentation
-      - framework: opencv
-        inputs:
-          - name: input.1
-            type: INPUT
-            shape: 1, 3, 512, 512
-        adapter: classification
     datasets:
       - name: VOC2012_Segmentation
         preprocessing:
@@ -21,7 +15,7 @@ models:
         postprocessing:
           - type: resize_segmentation_mask
             apply_to: annotation
-            to_dst_image_size: true
+            to_dst_image_size: True
           - type: encode_segmentation_mask
             apply_to: annotation
           - type: crop_segmentation_mask

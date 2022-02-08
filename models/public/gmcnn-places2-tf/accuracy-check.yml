@@ -5,22 +5,13 @@ models:
         model: frozen_model.pb
         adapter: inpainting
         inputs:
-          - name: Placeholder
+          - name: "Placeholder"
             type: INPUT
-            value: .*image
-          - name: Placeholder_1
+            value: '.*image'
+          - name: "Placeholder_1"
             type: INPUT
-            value: .*mask
+            value: '.*mask'
 
-      - framework: opencv
-        inputs:
-          - name: Placeholder
-            type: INPUT
-            shape: 1, 512, 680, 3
-          - name: Placeholder_1
-            type: INPUT
-            shape: 1, 512, 680, 1
-        adapter: classification
     datasets:
       - name: inpainting_rect_masks
 
@@ -43,12 +34,12 @@ models:
       - framework: dlsdk
         adapter: inpainting
         inputs:
-          - name: Placeholder
+          - name: "Placeholder"
             type: INPUT
-            value: .*image
-          - name: Placeholder_1
+            value: '.*image'
+          - name: "Placeholder_1"
             type: INPUT
-            value: .*mask
+            value: '.*mask'
 
     datasets:
       - name: inpainting_rect_masks

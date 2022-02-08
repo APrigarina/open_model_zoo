@@ -4,12 +4,6 @@ models:
       - framework: dlsdk
         adapter: segmentation
 
-      - framework: opencv
-        inputs:
-          - name: 1:mul_1
-            type: INPUT
-            shape: 1, 513, 513, 3
-        adapter: classification
     datasets:
       - name: VOC2012_Segmentation
         preprocessing:
@@ -17,13 +11,13 @@ models:
             aspect_ratio_scale: fit_to_window
             size: 513
             interpolation: ANTIALIAS
-            use_pillow: true
+            use_pillow: True
           - type: padding
-            pad_value: 127.5,127.5,127.5
+            pad_value: '127.5,127.5,127.5'
             size: 513
         postprocessing:
           - type: resize_segmentation_mask
-            to_dst_image_size: true
+            to_dst_image_size: True
             apply_to: annotation
           - type: crop_or_pad
             size: 513

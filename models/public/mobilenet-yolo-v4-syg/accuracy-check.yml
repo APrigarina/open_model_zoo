@@ -4,7 +4,7 @@ models:
       - framework: tf
         model: mobilenet-yolo-v4-syg.pb
         inputs:
-          - name: input_1
+          - name: 'input_1'
             type: INPUT
             shape: 1,416,416,3
         output_names:
@@ -20,19 +20,13 @@ models:
           anchor_masks: [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
           threshold: 0.001
           output_format: HWB
-          do_reshape: true
+          do_reshape: True
           cells: [52, 26, 13]
           outputs:
             - separable_conv2d_22/BiasAdd
             - separable_conv2d_30/BiasAdd
             - separable_conv2d_38/BiasAdd
-          raw_output: true
-      - framework: opencv
-        inputs:
-          - name: input_1
-            type: INPUT
-            shape: 1, 416, 416, 3
-        adapter: classification
+          raw_output: True
     datasets:
       - name: SYGData0829
         preprocessing:
@@ -44,7 +38,7 @@ models:
         postprocessing:
           - type: resize_prediction_boxes
           - type: filter
-            remove_filtered: true
+            remove_filtered: True
             apply_to: prediction
             min_confidence: 0.001
           - type: diou_nms
@@ -55,7 +49,7 @@ models:
           - type: map
             integral: 11point
             ignore_difficult: true
-            presenter: print_scalar
+            presenter:  print_scalar
             reference: 0.8711
 
   - name: mobilenet-yolo-v4-syg
@@ -92,5 +86,5 @@ models:
           - type: map
             integral: 11point
             ignore_difficult: true
-            presenter: print_scalar
+            presenter:  print_scalar
             reference: 0.8711

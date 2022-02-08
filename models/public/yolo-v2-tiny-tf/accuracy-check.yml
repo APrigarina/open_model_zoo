@@ -3,22 +3,15 @@ models:
 
     launchers:
       - framework: tf
-        model: yolo-v2-tiny.pb
+        model:   yolo-v2-tiny.pb
         adapter:
           type: yolo_v2
-          anchors: 0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282,
-            3.52778, 9.77052, 9.16828
+          anchors: "0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282, 3.52778, 9.77052, 9.16828"
           num: 5
           coords: 4
           classes: 80
-          raw_output: true
+          raw_output: True
 
-      - framework: opencv
-        inputs:
-          - name: image_input
-            type: INPUT
-            shape: 1, 416, 416, 3
-        adapter: classification
     datasets:
       - name: ms_coco_detection_80_class_without_background
 
@@ -34,7 +27,7 @@ models:
           - type: filter
             apply_to: prediction
             min_confidence: 0.001
-            remove_filtered: true
+            remove_filtered: True
           - type: nms
             overlap: 0.5
           - type: clip_boxes
@@ -43,7 +36,7 @@ models:
         metrics:
           - type: map
             integral: 11point
-            ignore_difficult: false
+            ignore_difficult: False
             presenter: print_scalar
             reference: 0.2734
           - type: coco_precision
@@ -57,8 +50,7 @@ models:
       - framework: dlsdk
         adapter:
           type: yolo_v2
-          anchors: 0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282,
-            3.52778, 9.77052, 9.16828
+          anchors: "0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282, 3.52778, 9.77052, 9.16828"
           num: 5
           coords: 4
           classes: 80
@@ -75,7 +67,7 @@ models:
           - type: filter
             apply_to: prediction
             min_confidence: 0.001
-            remove_filtered: true
+            remove_filtered: True
           - type: nms
             overlap: 0.5
           - type: clip_boxes
@@ -84,7 +76,7 @@ models:
         metrics:
           - type: map
             integral: 11point
-            ignore_difficult: false
+            ignore_difficult: False
             presenter: print_scalar
             reference: 0.2734
           - type: coco_precision

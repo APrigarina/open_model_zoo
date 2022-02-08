@@ -2,15 +2,9 @@ models:
   - name: ssd300-cf
     launchers:
       - framework: caffe
-        model: models/VGGNet/VOC0712Plus/SSD_512x512/deploy.prototxt
+        model:   models/VGGNet/VOC0712Plus/SSD_512x512/deploy.prototxt
         weights: models/VGGNet/VOC0712Plus/SSD_512x512/VGG_VOC0712Plus_SSD_512x512_iter_240000.caffemodel
         adapter: ssd
-      - framework: opencv
-        inputs:
-          - name: data
-            type: INPUT
-            shape: 1, 3, 512, 512
-        adapter: classification
     datasets:
       - name: VOC2007_detection
         preprocessing:
@@ -23,7 +17,7 @@ models:
         metrics:
           - type: map
             integral: 11point
-            ignore_difficult: true
+            ignore_difficult: True
             presenter: print_scalar
             reference: 0.9107
 
@@ -43,6 +37,6 @@ models:
         metrics:
           - type: map
             integral: 11point
-            ignore_difficult: true
+            ignore_difficult: True
             presenter: print_scalar
             reference: 0.9107

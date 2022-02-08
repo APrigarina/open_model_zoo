@@ -5,14 +5,8 @@ models:
         model: detr-resnet50.onnx
         adapter:
           type: detr
-          scores_out: scores
-          boxes_out: boxes
-      - framework: opencv
-        inputs:
-          - name: input
-            type: INPUT
-            shape: 1, 3, 800, 1137
-        adapter: classification
+          scores_out: "scores"
+          boxes_out: "boxes"
     datasets:
       - name: ms_coco_detection_91_classes
         reader: pillow_imread
@@ -37,8 +31,8 @@ models:
       - framework: dlsdk
         adapter:
           type: detr
-          scores_out: scores
-          boxes_out: boxes
+          scores_out: "scores"
+          boxes_out: "boxes"
     datasets:
       - name: ms_coco_detection_91_classes
         reader: pillow_imread

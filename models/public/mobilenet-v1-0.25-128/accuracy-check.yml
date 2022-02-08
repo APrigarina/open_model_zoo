@@ -6,12 +6,6 @@ models:
         inputs:
           - name: input
         adapter: classification
-      - framework: opencv
-        inputs:
-          - name: input
-            type: INPUT
-            shape: 1, 128, 128, 3
-        adapter: classification
     datasets:
       - name: imagenet_1001_classes
         preprocessing:

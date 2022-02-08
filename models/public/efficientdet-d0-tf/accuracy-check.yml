@@ -3,12 +3,6 @@ models:
     launchers:
       - framework: dlsdk
         adapter: ssd
-      - framework: opencv
-        inputs:
-          - name: image_arrays
-            type: INPUT
-            shape: 1, 512, 512, 3
-        adapter: classification
     datasets:
       - name: ms_coco_detection_90_class_without_background
         preprocessing:

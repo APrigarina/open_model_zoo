@@ -3,9 +3,9 @@ models:
 
     launchers:
       - framework: tf
-        model: yolo-v3.pb
+        model:   yolo-v3.pb
         inputs:
-          - name: input_1
+          - name: 'input_1'
             type: INPUT
             shape: 1,416,416,3
         output_names:
@@ -14,23 +14,17 @@ models:
           - conv2d_74/BiasAdd
         adapter:
           type: yolo_v3
-          anchors: 10,13,  16,30,  33,23,  30,61,  62,45,  59,119,  116,90,  156,198,  373,326
+          anchors: "10,13,  16,30,  33,23,  30,61,  62,45,  59,119,  116,90,  156,198,  373,326"
           num: 9
           coords: 4
           classes: 80
           anchor_masks: [[6, 7, 8], [3, 4, 5], [0, 1, 2]]
-          raw_output: true
+          raw_output: True
           outputs:
             - conv2d_58/BiasAdd
             - conv2d_66/BiasAdd
             - conv2d_74/BiasAdd
 
-      - framework: opencv
-        inputs:
-          - name: input_1
-            type: INPUT
-            shape: 1, 416, 416, 3
-        adapter: classification
     datasets:
       - name: ms_coco_detection_80_class_without_background
 
@@ -46,7 +40,7 @@ models:
           - type: filter
             apply_to: prediction
             min_confidence: 0.001
-            remove_filtered: true
+            remove_filtered: True
           - type: nms
             overlap: 0.5
           - type: clip_boxes
@@ -69,7 +63,7 @@ models:
       - framework: dlsdk
         adapter:
           type: yolo_v3
-          anchors: 10,13,  16,30,  33,23,  30,61,  62,45,  59,119,  116,90,  156,198,  373,326
+          anchors: "10,13,  16,30,  33,23,  30,61,  62,45,  59,119,  116,90,  156,198,  373,326"
           num: 9
           coords: 4
           classes: 80
@@ -91,7 +85,7 @@ models:
           - type: filter
             apply_to: prediction
             min_confidence: 0.001
-            remove_filtered: true
+            remove_filtered: True
           - type: nms
             overlap: 0.5
           - type: clip_boxes

@@ -17,12 +17,6 @@ models:
             type: INPUT
             layout: NHWC
 
-      - framework: opencv
-        inputs:
-          - name: data
-            type: INPUT
-            shape: 1, 256, 256, 3
-        adapter: classification
     datasets:
       - name: wider_without_bkgr
 
@@ -43,12 +37,12 @@ models:
           - type: filter
             apply_to: annotation
             height_range: 60
-            is_empty: true
+            is_empty: True
 
         metrics:
           - type: map
-            ignore_difficult: true
-            include_boundaries: false
-            allow_multiple_matches_per_ignored: true
-            use_filtered_tp: true
+            ignore_difficult: True
+            include_boundaries: False
+            allow_multiple_matches_per_ignored: True
+            use_filtered_tp: True
             reference: 0.787488

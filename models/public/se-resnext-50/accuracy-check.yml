@@ -2,16 +2,10 @@ models:
   - name: se-resnext-50-cf
     launchers:
       - framework: caffe
-        model: se-resnext-50.prototxt
+        model:   se-resnext-50.prototxt
         weights: se-resnext-50.caffemodel
         adapter: classification
 
-      - framework: opencv
-        inputs:
-          - name: data
-            type: INPUT
-            shape: 1, 3, 224, 224
-        adapter: classification
     datasets:
       - name: imagenet_1000_classes_2015
         preprocessing:

@@ -6,14 +6,8 @@ models:
         model: deblurgan-v2.onnx
         adapter:
           type: image_processing
-          reverse_channels: true
+          reverse_channels: True
 
-      - framework: opencv
-        inputs:
-          - name: blur_image
-            type: INPUT
-            shape: 1, 3, 736, 1312
-        adapter: classification
     datasets:
       - name: GoPro
         preprocessing:
@@ -24,7 +18,7 @@ models:
           - type: padding
             dst_height: 736
             dst_width: 1312
-            use_numpy: true
+            use_numpy: True
             pad_type: right_bottom
         postprocessing:
           - type: corner_crop_image
@@ -46,7 +40,7 @@ models:
       - framework: dlsdk
         adapter:
           type: image_processing
-          reverse_channels: true
+          reverse_channels: True
 
     datasets:
       - name: GoPro
@@ -54,7 +48,7 @@ models:
           - type: padding
             dst_height: 736
             dst_width: 1312
-            use_numpy: true
+            use_numpy: True
             pad_type: right_bottom
         postprocessing:
           - type: corner_crop_image
