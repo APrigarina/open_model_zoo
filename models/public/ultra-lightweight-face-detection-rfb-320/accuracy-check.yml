@@ -9,6 +9,12 @@ models:
           boxes_out: boxes
           scores_out: scores
 
+      - framework: opencv
+        inputs:
+          - name: input
+            type: INPUT
+            shape: 1, 3, 240, 320
+        adapter: classification
     datasets:
       - name: wider
 
@@ -41,15 +47,6 @@ models:
 
     launchers:
       - framework: dlsdk
-        adapter:
-          type: ultra_lightweight_face_detection
-          boxes_out: boxes
-          scores_out: scores
-      - framework: opencv
-        inputs:
-          - name: input
-            type: INPUT
-            shape: 1, 3, 240, 320
         adapter:
           type: ultra_lightweight_face_detection
           boxes_out: boxes

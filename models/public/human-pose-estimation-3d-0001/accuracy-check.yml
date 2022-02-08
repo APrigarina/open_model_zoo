@@ -15,12 +15,7 @@ models:
           - name: data
             type: INPUT
             shape: 1, 3, 256, 448
-        allow_reshape_input: true
-        adapter:
-          type: human_pose_estimation_3d
-          features_3d_out: features
-          keypoints_heatmap_out: heatmaps
-          part_affinity_fields_out: pafs
+        adapter: classification
     datasets:
       - name: cmu_panoptic_keypoints
 

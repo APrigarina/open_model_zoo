@@ -8,7 +8,7 @@ models:
           - name: input.1
             type: INPUT
             shape: 1, 3, 512, 512
-        adapter: segmentation
+        adapter: classification
     datasets:
       - name: VOC2012_Segmentation
         preprocessing:

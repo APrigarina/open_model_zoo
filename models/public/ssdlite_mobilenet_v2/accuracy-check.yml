@@ -9,7 +9,7 @@ models:
           - name: image_tensor
             type: INPUT
             shape: 1, 300, 300, 3
-        adapter: ssd
+        adapter: classification
     datasets:
       - name: ms_coco_detection_91_classes
         preprocessing:

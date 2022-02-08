@@ -6,6 +6,12 @@ models:
         model: hrnet-v2-c1-segmentation.onnx
         adapter: segmentation
 
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 1, 3, 320, 320
+        adapter: classification
     datasets:
       - name: ADEChallengeData2016
         preprocessing:
@@ -37,12 +43,6 @@ models:
 
     launchers:
       - framework: dlsdk
-        adapter: segmentation
-      - framework: opencv
-        inputs:
-          - name: data
-            type: INPUT
-            shape: 1, 3, 320, 320
         adapter: segmentation
 
     datasets:

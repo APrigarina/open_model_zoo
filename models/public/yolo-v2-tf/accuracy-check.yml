@@ -15,6 +15,12 @@ models:
           cells: 19
           raw_output: true
 
+      - framework: opencv
+        inputs:
+          - name: image_input
+            type: INPUT
+            shape: 1, 608, 608, 3
+        adapter: classification
     datasets:
       - name: ms_coco_detection_80_class_without_background
 
@@ -51,19 +57,6 @@ models:
 
     launchers:
       - framework: dlsdk
-        adapter:
-          type: yolo_v2
-          anchors: 0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282,
-            3.52778, 9.77052, 9.16828
-          num: 5
-          coords: 4
-          classes: 80
-          cells: 19
-      - framework: opencv
-        inputs:
-          - name: image_input
-            type: INPUT
-            shape: 1, 608, 608, 3
         adapter:
           type: yolo_v2
           anchors: 0.57273, 0.677385, 1.87446, 2.06253, 3.33843, 5.47434, 7.88282,

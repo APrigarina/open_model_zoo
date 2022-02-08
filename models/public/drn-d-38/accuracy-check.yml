@@ -10,9 +10,7 @@ models:
           - name: input
             type: INPUT
             shape: 1, 3, 1024, 2048
-        adapter:
-          type: segmentation
-          make_argmax: true
+        adapter: classification
     datasets:
       - name: cityscapes
         metrics:

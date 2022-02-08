@@ -12,9 +12,7 @@ models:
           - name: data_crop
             type: INPUT
             shape: 1, 4, 128, 128, 128
-        adapter:
-          type: brain_tumor_segmentation
-          make_argmax: true
+        adapter: classification
     datasets:
       - name: BraTS
 

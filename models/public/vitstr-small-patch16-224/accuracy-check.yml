@@ -12,6 +12,12 @@ models:
           # Use option "accuracy_check [...] --model_attributes <path_to_vocab>" to provide path to vocab.txt
           vocabulary_file: vocab.txt
 
+      - framework: opencv
+        inputs:
+          - name: image
+            type: INPUT
+            shape: 1, 1, 224, 224
+        adapter: classification
     datasets:
       - name: ICDAR2013
         preprocessing:
@@ -71,19 +77,6 @@ models:
   - name: vitstr-small-patch16-224
     launchers:
       - framework: dlsdk
-        adapter:
-          type: simple_decoder
-          eos_label: '[s]'
-          start_label: '[GO]'
-          start_index: 1
-          do_lower: true
-          # Use option "accuracy_check [...] --model_attributes <path_to_vocab>" to provide path to vocab.txt
-          vocabulary_file: vocab.txt
-      - framework: opencv
-        inputs:
-          - name: image
-            type: INPUT
-            shape: 1, 1, 224, 224
         adapter:
           type: simple_decoder
           eos_label: '[s]'

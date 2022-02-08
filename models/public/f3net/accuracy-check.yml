@@ -4,7 +4,12 @@ models:
       - framework: onnx_runtime
         model: f3net.onnx
         adapter: salient_object_detection
-
+      - framework: opencv
+        inputs:
+          - name: input.1
+            type: INPUT
+            shape: 1, 3, 352, 352
+        adapter: classification
     datasets:
       - name: PASCAL-S
         preprocessing:
@@ -27,12 +32,6 @@ models:
   - name: f3net
     launchers:
       - framework: dlsdk
-        adapter: salient_object_detection
-      - framework: opencv
-        inputs:
-          - name: input.1
-            type: INPUT
-            shape: 1, 3, 352, 352
         adapter: salient_object_detection
     datasets:
       - name: PASCAL-S

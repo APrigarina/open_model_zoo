@@ -5,7 +5,12 @@ models:
         model: vgg16.prototxt
         weights: vgg16.caffemodel
         adapter: classification
-
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 1, 3, 224, 224
+        adapter: classification
     datasets:
       - name: imagenet_1000_classes
         preprocessing:
@@ -29,12 +34,6 @@ models:
   - name: vgg16
     launchers:
       - framework: dlsdk
-        adapter: classification
-      - framework: opencv
-        inputs:
-          - name: data
-            type: INPUT
-            shape: 1, 3, 224, 224
         adapter: classification
 
     datasets:

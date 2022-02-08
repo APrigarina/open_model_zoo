@@ -6,6 +6,12 @@ models:
         model: nfnet-f0.onnx
         adapter: classification
 
+      - framework: opencv
+        inputs:
+          - name: image
+            type: INPUT
+            shape: 1, 3, 256, 256
+        adapter: classification
     datasets:
       - name: imagenet_1000_classes
         reader: pillow_imread
@@ -37,12 +43,6 @@ models:
 
     launchers:
       - framework: dlsdk
-        adapter: classification
-      - framework: opencv
-        inputs:
-          - name: image
-            type: INPUT
-            shape: 1, 3, 256, 256
         adapter: classification
 
     datasets:

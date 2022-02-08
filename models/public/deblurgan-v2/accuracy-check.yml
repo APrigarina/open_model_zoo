@@ -8,6 +8,12 @@ models:
           type: image_processing
           reverse_channels: true
 
+      - framework: opencv
+        inputs:
+          - name: blur_image
+            type: INPUT
+            shape: 1, 3, 736, 1312
+        adapter: classification
     datasets:
       - name: GoPro
         preprocessing:
@@ -38,14 +44,6 @@ models:
 
     launchers:
       - framework: dlsdk
-        adapter:
-          type: image_processing
-          reverse_channels: true
-      - framework: opencv
-        inputs:
-          - name: blur_image
-            type: INPUT
-            shape: 1, 3, 736, 1312
         adapter:
           type: image_processing
           reverse_channels: true

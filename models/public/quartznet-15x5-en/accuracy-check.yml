@@ -17,11 +17,7 @@ models:
           - name: audio_signal
             type: INPUT
             shape: 1, 64, 128
-        allow_reshape_input: true
-        adapter:
-          type: ctc_greedy_decoder
-          alphabet: [' ', a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s,
-            t, u, v, w, x, y, z, "'"]
+        adapter: classification
     datasets:
       - name: LibriSpeech_test_clean_npy_nemo
         reader: numpy_reader

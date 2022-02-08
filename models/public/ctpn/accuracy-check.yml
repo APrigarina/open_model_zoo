@@ -13,11 +13,7 @@ models:
           - name: Placeholder
             type: INPUT
             shape: 1, 600, 600, 3
-        adapter:
-          type: ctpn_text_detection
-          cls_prob_out: Reshape_2/Transpose
-          bbox_pred_out: rpn_bbox_pred/Reshape_1/Transpose
-        allow_reshape_input: true
+        adapter: classification
     datasets:
       - name: ICDAR2013_detection
 

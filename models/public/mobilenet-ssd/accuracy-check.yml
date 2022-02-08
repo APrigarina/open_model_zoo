@@ -5,7 +5,12 @@ models:
         model: mobilenet-ssd.prototxt
         weights: mobilenet-ssd.caffemodel
         adapter: ssd
-
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 1, 3, 300, 300
+        adapter: classification
     datasets:
       - name: VOC2007_detection
         preprocessing:
@@ -26,12 +31,6 @@ models:
   - name: mobilenet-ssd
     launchers:
       - framework: dlsdk
-        adapter: ssd
-      - framework: opencv
-        inputs:
-          - name: data
-            type: INPUT
-            shape: 1, 3, 300, 300
         adapter: ssd
 
     datasets:

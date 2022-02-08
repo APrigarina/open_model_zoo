@@ -5,7 +5,12 @@ models:
         model: models/VGGNet/VOC0712Plus/SSD_300x300_ft/deploy.prototxt
         weights: models/VGGNet/VOC0712Plus/SSD_300x300_ft/VGG_VOC0712Plus_SSD_300x300_ft_iter_160000.caffemodel
         adapter: ssd
-
+      - framework: opencv
+        inputs:
+          - name: data
+            type: INPUT
+            shape: 1, 3, 300, 300
+        adapter: classification
     datasets:
       - name: VOC2007_detection
         preprocessing:
@@ -25,12 +30,6 @@ models:
   - name: ssd300
     launchers:
       - framework: dlsdk
-        adapter: ssd
-      - framework: opencv
-        inputs:
-          - name: data
-            type: INPUT
-            shape: 1, 3, 300, 300
         adapter: ssd
 
     datasets:
