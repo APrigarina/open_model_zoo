@@ -109,6 +109,9 @@ class OpenCVLauncher(Launcher):
             self._inputs_shapes = self.get_inputs_from_config(self.config)
             self.network.setInputsNames(list(self._inputs_shapes.keys()))
             self.output_names = self.network.getUnconnectedOutLayersNames()
+        self._lstm_inputs = None
+        if '_list_lstm_inputs' in self.config:
+            self._configure_lstm_inputs()
 
     @classmethod
     def validate_config(cls, config, delayed_model_loading=False, fetch_only=False, uri_prefix=''):
@@ -204,6 +207,87 @@ class OpenCVLauncher(Launcher):
 
         return model, weights
 
+    def _configure_lstm_inputs(self):
+        lstm_mapping = {}
+        config_inputs = self.config.get('inputs', [])
+        for input_config in config_inputs:
+            if input_config['type'] == 'LSTM_INPUT':
+                lstm_mapping[input_config['name']] = input_config['value']
+        self._lstm_inputs = lstm_mapping
+
+    def _fill_lstm_inputs(self, infer_outputs=None):
+        feed_dict = {}
+        for i, lstm_var in enumerate(self._lstm_inputs.keys()):
+            layer_shape = self._inputs_shapes[lstm_var]
+            input_data = infer_outputs[i].reshape(layer_shape) if infer_outputs else np.zeros(
+                layer_shape
+            )
+            feed_dict[lstm_var] = input_data
+        return feed_dict
+
+    def _data_to_blob(self, layer_shape, data, layout):  # pylint:disable=R0911,R0912
+        data_shape = np.shape(data)
+        if len(layer_shape) == 4:
+            if len(data_shape) == 5:
+                data = data[0]
+            if len(data_shape) == 3:
+                data = np.expand_dims(data, -1)
+            data_shape = np.shape(data)
+            if len(data_shape) < 4:
+                if len(np.squeeze(np.zeros(layer_shape))) == len(np.squeeze(np.zeros(data_shape))):
+                    return np.resize(data, layer_shape)
+            return np.transpose(data, layout) if layout is not None else data
+        if len(layer_shape) == 2:
+            if len(data_shape) == 1:
+                return np.transpose([data])
+            if len(data_shape) > 2:
+                if all(dim == 1 for dim in layer_shape) and all(dim == 1 for dim in data_shape):
+                    return np.resize(data, layer_shape)
+                if len(np.squeeze(np.zeros(layer_shape))) == len(np.squeeze(np.zeros(data_shape))):
+                    return np.resize(data, layer_shape)
+        if len(layer_shape) == 3 and len(data_shape) == 4:
+            return np.transpose(data, layout)[0] if layout is not None else data[0]
+        if len(layer_shape) == 1:
+            return np.resize(data, layer_shape)
+        if (len(data_shape) == 3) and (len(layer_shape) == 2) and (data_shape[0] == 1) and (
+                data_shape[1] == 1) and self.allow_reshape_input:
+            return data[0]
+        if layout is not None and len(layer_shape) == len(layout):
+            return np.transpose(data, layout)
+        if (
+                len(layer_shape) == 1 and len(data_shape) > 1 and
+                len(np.squeeze(np.zeros(layer_shape))) == len(np.squeeze(np.zeros(data_shape)))
+        ):
+            return np.resize(data, layer_shape)
+        return np.array(data)
+
+    def fit_to_input(self, data, layer_name, layout, precision, template=None):
+        layer_shape = tuple(self._inputs_shapes[layer_name])
+        data = self._data_to_blob(layer_shape, data, layout)
+        if precision:
+            data = data.astype(precision)
+
+        return data
+
+    def predict_sequential(self, inputs, metadata=None, **kwargs):
+        lstm_inputs_feed = self._fill_lstm_inputs()
+        results = []
+        for input_blobs in inputs:
+            input_blobs.update(lstm_inputs_feed)
+            for blob_name in input_blobs.keys():
+                input = input_blobs[blob_name].astype(np.float32)
+                self.network.setInput(input, blob_name)
+            list_prediction = self.network.forward(self.output_names)
+            lstm_inputs_feed = self._fill_lstm_inputs(list_prediction)
+            dict_result = dict(zip(self.output_names, list_prediction))
+            results.append(dict_result)
+
+        if metadata is not None:
+            for meta_ in metadata:
+                meta_['input_shape'] = self.inputs_info_for_meta()
+
+        return results
+
     def predict(self, inputs, metadata=None, **kwargs):
         """
         Args:
@@ -213,6 +297,9 @@ class OpenCVLauncher(Launcher):
             raw data from network.
         """
         results = []
+        if self._lstm_inputs:
+            return self.predict_sequential(inputs, metadata)
+
         for input_blobs in inputs:
             for blob_name in self._inputs_shapes:
                 self.network.setInput(input_blobs[blob_name].astype(np.float32), blob_name)
