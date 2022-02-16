@@ -16,6 +16,7 @@ models:
         adapter:
           type: image_processing
           reverse_channels: True
+        allow_reshape_input: True
 
     datasets:
       - name: LIVE_1

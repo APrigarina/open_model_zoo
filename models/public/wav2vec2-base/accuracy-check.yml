@@ -11,7 +11,8 @@ models:
         inputs:
           - name: inputs
             type: INPUT
-            shape: 1, 30480
+            shape: 30480
+        allow_reshape_input: true
         adapter:
           type: wav2vec
           alphabet: [<pad>, <s>, </s>, <unk>, '|', E, T, A, O, N, I, H, S, R, D, L,

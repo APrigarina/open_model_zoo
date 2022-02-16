@@ -18,6 +18,7 @@ models:
             type: INPUT
             layout: NHWC
             shape: 64, 128
+        allow_reshape_input: true
         adapter:
           type: ctc_greedy_decoder
           alphabet: [' ', a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s,

@@ -39,7 +39,7 @@ models:
         adapter: classification
       - framework: opencv
         inputs:
-          - name: IteratorGetNext:0
+          - name: IteratorGetNext/placeholder_out_port_0
             type: INPUT
             shape: 3, 224, 224
         adapter: classification
