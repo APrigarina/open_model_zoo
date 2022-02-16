@@ -74,6 +74,7 @@ models:
             type: INPUT
             value: .*x
             shape: 1
+        allow_reshape_input: True
 
     datasets:
       - name: wavernn-io

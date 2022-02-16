@@ -20,6 +20,7 @@ models:
           features_3d_out: features
           keypoints_heatmap_out: heatmaps
           part_affinity_fields_out: pafs
+        allow_reshape_input: true
 
     datasets:
       - name: cmu_panoptic_keypoints

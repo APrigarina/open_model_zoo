@@ -24,6 +24,7 @@ models:
             type: INPUT
             layout: NHWC
             shape: 200, 80
+        allow_reshape_input: True
 
     datasets:
       - name: wavernn-io-upsampler
