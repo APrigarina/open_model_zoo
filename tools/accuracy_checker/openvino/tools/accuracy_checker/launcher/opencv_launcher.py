@@ -20,7 +20,7 @@ import numpy as np
 import cv2
 from pathlib import Path
 
-from ..config import PathField, StringField, ConfigError, ListInputsField
+from ..config import PathField, StringField, ConfigError, ListInputsField, BoolField
 from ..logging import print_info
 from .launcher import Launcher, LauncherConfigValidator
 from ..utils import get_or_parse_value, get_path
@@ -74,7 +74,8 @@ class OpenCVLauncher(Launcher):
                 regex=BACKEND_REGEX, choices=OpenCVLauncher.OPENCV_BACKENDS.keys(),
                 optional=True, default='IE',
                 description="Backend name: {}".format(', '.join(OpenCVLauncher.OPENCV_BACKENDS.keys()))),
-            'inputs': ListInputsField(optional=False, description="Inputs.")
+            'inputs': ListInputsField(optional=False, description="Inputs."),
+            'allow_reshape_input': BoolField(optional=True, default=False, description="Allows reshape input."),
         })
 
         return parameters
@@ -107,6 +108,7 @@ class OpenCVLauncher(Launcher):
                 )
             self.network = self.create_network(self.model, self.weights)
             self._inputs_shapes = self.get_inputs_from_config(self.config)
+            self.allow_reshape_input = self.get_value_from_config('allow_reshape_input')
             self.network.setInputsNames(list(self._inputs_shapes.keys()))
             self.output_names = self.network.getUnconnectedOutLayersNames()
         self._lstm_inputs = None
@@ -188,7 +190,6 @@ class OpenCVLauncher(Launcher):
             weights_list = []
             if model.suffix == '.xml':
                 weights = Path(weights_dir) / model.name.replace('xml', 'bin')
-                print(weights)
             else:
                 if model.suffix == '.prototxt':
                     weights_list = list(Path(weights_dir).glob('*.{}'.format('caffemodel')))
@@ -266,8 +267,11 @@ class OpenCVLauncher(Launcher):
         data = self._data_to_blob(layer_shape, data, layout)
         if precision:
             data = data.astype(precision)
+        if data.shape != layer_shape:
+            if self.allow_reshape_input:
+                return data
 
-        return data
+        return data.reshape(layer_shape)
 
     def predict_sequential(self, inputs, metadata=None, **kwargs):
         lstm_inputs_feed = self._fill_lstm_inputs()
