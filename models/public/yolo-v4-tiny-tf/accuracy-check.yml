@@ -81,6 +81,7 @@ models:
         inputs:
           - name: image_input
             type: INPUT
+            layout: NHWC
             shape: 3, 416, 416
         adapter:
           type: yolo_v3
@@ -90,7 +91,8 @@ models:
           classes: 80
           threshold: 0.001
           anchor_masks: [[1, 2, 3], [3, 4, 5]]
-          raw_output: true
+          raw_output: True
+          output_format: HWB
           outputs:
             - conv2d_20/BiasAdd
             - conv2d_17/BiasAdd

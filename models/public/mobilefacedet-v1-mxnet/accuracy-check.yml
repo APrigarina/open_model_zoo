@@ -22,7 +22,7 @@ models:
           - name: data
             type: INPUT
             layout: NHWC
-            shape: 3, 256, 256
+            shape: 256, 256, 3
         adapter:
           type: yolo_v3
           classes: 1

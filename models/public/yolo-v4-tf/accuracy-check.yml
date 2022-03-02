@@ -95,9 +95,9 @@ models:
           anchor_masks: [[0, 1, 2], [3, 4, 5], [6, 7, 8]]
           raw_output: true
           outputs:
-            - Func/StatefulPartitionedCall/output/_544
-            - Func/StatefulPartitionedCall/output/_542
-            - Func/StatefulPartitionedCall/output/_543
+            - StatefulPartitionedCall/model/conv2d_93/BiasAdd/Add
+            - StatefulPartitionedCall/model/conv2d_101/BiasAdd/Add
+            - StatefulPartitionedCall/model/conv2d_109/BiasAdd/Add
 
     datasets:
       - name: ms_coco_detection_80_class_without_background
