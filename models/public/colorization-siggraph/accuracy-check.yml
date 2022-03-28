@@ -20,11 +20,11 @@ models:
           - name: data_l
             type: INPUT
             shape: 1, 256, 256
-          - name: "user_map"
+          - name: "user_ab"
             type: CONST_INPUT
             value: 0
             shape: [2, 256, 256]
-          - name: "user_ab"
+          - name: "user_map"
             type: CONST_INPUT
             value: 0
             shape: [1, 256, 256]
